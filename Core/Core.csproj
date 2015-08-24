@@ -46,30 +46,32 @@
     <Compile Include="Src\ActionsData\TraderParameters.cs" />
     <Compile Include="Src\Core\GameState.cs" />
     <Compile Include="Src\Core\StateMachine.cs" />
-    <Compile Include="Src\Entitites\BuildingBase.cs" />
-    <Compile Include="Src\Entitites\Buildings\ConstructionHut.cs" />
-    <Compile Include="Src\Entitites\Buildings\Hospice.cs" />
-    <Compile Include="Src\Entitites\Buildings\LargeMarket.cs" />
-    <Compile Include="Src\Entitites\Buildings\Office.cs" />
-    <Compile Include="Src\Entitites\Buildings\SmallMarket.cs" />
-    <Compile Include="Src\Entitites\IBuilding.cs" />
-    <Compile Include="Src\Entitites\MainBoard.cs" />
-    <Compile Include="Src\Entitites\Market.cs" />
-    <Compile Include="Src\Entitites\PlayerController.cs" />
-    <Compile Include="Src\Entitites\RoleAction.cs" />
-    <Compile Include="Src\Entitites\Roles.cs" />
-    <Compile Include="Src\Entitites\Plantation.cs" />
-    <Compile Include="Src\Entitites\Goods.cs" />
-    <Compile Include="Src\Entitites\PlayerBoard.cs" />
-    <Compile Include="Src\Entitites\Player.cs" />
-    <Compile Include="Src\Entitites\Quarry.cs" />
-    <Compile Include="Src\Entitites\Ship.cs" />
-    <Compile Include="Src\Entitites\Warehouse.cs" />
+    <Compile Include="Src\Entities\BuildingBase.cs" />
+    <Compile Include="Src\Entities\Buildings\ConstructionHut.cs" />
+    <Compile Include="Src\Entities\Buildings\Hospice.cs" />
+    <Compile Include="Src\Entities\Buildings\LargeMarket.cs" />
+    <Compile Include="Src\Entities\Buildings\Office.cs" />
+    <Compile Include="Src\Entities\Buildings\SmallMarket.cs" />
+    <Compile Include="Src\Entities\Constants.cs" />
+    <Compile Include="Src\Entities\IBuilding.cs" />
+    <Compile Include="Src\Entities\MainBoard.cs" />
+    <Compile Include="Src\Entities\Market.cs" />
+    <Compile Include="Src\Entities\PlayerController.cs" />
+    <Compile Include="Src\Entities\RoleAction.cs" />
+    <Compile Include="Src\Entities\RoleCard.cs" />
+    <Compile Include="Src\Entities\Roles.cs" />
+    <Compile Include="Src\Entities\Plantation.cs" />
+    <Compile Include="Src\Entities\Goods.cs" />
+    <Compile Include="Src\Entities\PlayerBoard.cs" />
+    <Compile Include="Src\Entities\Player.cs" />
+    <Compile Include="Src\Entities\Quarry.cs" />
+    <Compile Include="Src\Entities\Ship.cs" />
+    <Compile Include="Src\Entities\Warehouse.cs" />
     <Compile Include="Src\Utils\Util.cs" />
     <Compile Include="Src\Utils\MainFactory.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Src\Entitites\Plantations\" />
+    <Folder Include="Src\Entities\Plantations\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

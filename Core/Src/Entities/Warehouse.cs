@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Core.Entitites
+namespace Core.Entities
 {
     public class Warehouse
     {

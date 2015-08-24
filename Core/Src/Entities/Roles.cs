@@ -1,4 +1,4 @@
-﻿namespace Core.Entitites
+﻿namespace Core.Entities
 {
     public enum Roles
     {
@@ -7,7 +7,7 @@
         Builder,
         Craftsman,
         Trader,
-        Captaion,
+        Captain,
         Prospector
     }
 }

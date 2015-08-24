@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using Core.Entitites;
+using Core.Entities;
 
 namespace Core.ActionsData
 {

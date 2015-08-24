@@ -2,7 +2,7 @@
 using System.Linq;
 using Core.ActionsData;
 
-namespace Core.Entitites
+namespace Core.Entities
 {
     public class PlayerController
     {
@@ -60,7 +60,7 @@ namespace Core.Entitites
 
             data.CanTakeAdditionalColonist = settlerParameters.CanTakeAdditionalColonist;
             data.CanTakeAdditionalPlantation = settlerParameters.CanTakeAdditionalPlantation;
-            data.CanTakeQuarryIsteadPlantation = settlerParameters.CanTakeQuarryInsteadPlantation;
+            data.CanTakeQuarryInsteadPlantation = settlerParameters.CanTakeQuarryInsteadPlantation;
             data.AvailablePlantations = _mainBoard.AvailablePlantations;
             data.AvailableQuarryCount = _mainBoard.Quarries.Count;
         }

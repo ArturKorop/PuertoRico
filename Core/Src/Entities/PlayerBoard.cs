@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
-namespace Core.Entitites
+namespace Core.Entities
 {
     public class PlayerBoard
     {

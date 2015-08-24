@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using Core.Entitites;
+using Core.Entities;
 
 namespace Core.ActionsData
 {
@@ -7,7 +7,7 @@ namespace Core.ActionsData
     {
         public bool CanTakeAdditionalPlantation { get; set; }
 
-        public bool CanTakeQuarryIsteadPlantation { get; set; }
+        public bool CanTakeQuarryInsteadPlantation { get; set; }
 
         public bool CanTakeAdditionalColonist { get; set; }
 

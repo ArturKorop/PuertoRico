@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using Core.ActionsData;
-using Core.Entitites;
-using Core.Entitites.Buildings;
+using Core.Entities;
+using Core.Entities.Buildings;
 using NUnit.Framework;
 
 namespace Test.Entities.Buildings

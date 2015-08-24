@@ -1,4 +1,4 @@
-﻿namespace Core.Entitites
+﻿namespace Core.Entities
 {
     public abstract class BuildingBase<T> : IBuilding
     {

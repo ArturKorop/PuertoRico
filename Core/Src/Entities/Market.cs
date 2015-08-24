@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Core.ActionsData;
 
-namespace Core.Entitites
+namespace Core.Entities
 {
     public class Market
     {

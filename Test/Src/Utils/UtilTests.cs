@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Core.Entitites;
+using Core.Entities;
 using Core.Utils;
 using NUnit.Framework;
 
@@ -14,10 +14,10 @@ namespace Test.Utils
         {
             IEnumerable<Plantation>[] sourcePlantations =
             {
-                MainFactory.GetPlantions(5, Goods.Corn),
-                MainFactory.GetPlantions(5, Goods.Tabacco),
-                MainFactory.GetPlantions(5, Goods.Sugar),
-                MainFactory.GetPlantions(5, Goods.Coffee)
+                MainFactory.GeneratePlantations(5, Goods.Corn),
+                MainFactory.GeneratePlantations(5, Goods.Tabacco),
+                MainFactory.GeneratePlantations(5, Goods.Sugar),
+                MainFactory.GeneratePlantations(5, Goods.Coffee)
             };
 
             var plantations = Util.Shuffle(sourcePlantations).ToList();

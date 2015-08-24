@@ -1,6 +1,6 @@
 ﻿using Core.ActionsData;
 
-namespace Core.Entitites.Buildings
+namespace Core.Entities.Buildings
 {
     public class Office : BuildingBase<TraderParameters>
     {
