@@ -26,5 +26,10 @@
             Board = new PlayerBoard();
             Warehouse = new Warehouse();
         }
+
+        public void ReceiveDoubloons(int doubloons)
+        {
+            Doubloons += doubloons;
+        }
     }
 }

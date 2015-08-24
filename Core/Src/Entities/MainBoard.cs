@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Core.Utils;
 
 namespace Core.Entities
@@ -82,6 +83,18 @@ namespace Core.Entities
             var result = Util.Shuffle(plantations);
 
             return result;
+        }
+
+        public int TakeDoubloons(int doubloons)
+        {
+            if (Doubloons < doubloons)
+            {
+                throw new InvalidOperationException("Too less doubloons");
+            }
+
+            Doubloons -= doubloons;
+
+            return doubloons;
         }
     }
 }

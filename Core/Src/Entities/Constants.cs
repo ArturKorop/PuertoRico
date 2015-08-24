@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Core.Entities
 {
@@ -70,6 +71,30 @@ namespace Core.Entities
                     {Goods.Corn, 6},
                 }
             },
+        };
+
+        public static readonly Dictionary<int, int> DoubloonsByPlayers = new Dictionary<int, int>
+        {
+            {3, 2},
+            {4, 3},
+            {5, 4},
+        };
+
+        public static readonly Dictionary<Tuple<int, int>, Goods> PlantationsByPlayersOrder = new Dictionary
+            <Tuple<int, int>, Goods>
+        {
+            {new Tuple<int, int>(1, 3), Goods.Indigo},
+            {new Tuple<int, int>(2, 3), Goods.Indigo},
+            {new Tuple<int, int>(3, 3), Goods.Corn},
+            {new Tuple<int, int>(1, 4), Goods.Indigo},
+            {new Tuple<int, int>(2, 4), Goods.Indigo},
+            {new Tuple<int, int>(3, 4), Goods.Corn},
+            {new Tuple<int, int>(4, 4), Goods.Corn},
+            {new Tuple<int, int>(1, 5), Goods.Indigo},
+            {new Tuple<int, int>(2, 5), Goods.Indigo},
+            {new Tuple<int, int>(3, 5), Goods.Indigo},
+            {new Tuple<int, int>(4, 5), Goods.Corn},
+            {new Tuple<int, int>(5, 5), Goods.Corn},
         };
     }
 }

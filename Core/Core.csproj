@@ -44,7 +44,9 @@
     <Compile Include="Src\ActionsData\SimulateSettlerActionData.cs" />
     <Compile Include="Src\ActionsData\SimulateTradeActionData.cs" />
     <Compile Include="Src\ActionsData\TraderParameters.cs" />
+    <Compile Include="Src\Core\GameController.cs" />
     <Compile Include="Src\Core\GameState.cs" />
+    <Compile Include="Src\Core\PlayerController.cs" />
     <Compile Include="Src\Core\StateMachine.cs" />
     <Compile Include="Src\Entities\BuildingBase.cs" />
     <Compile Include="Src\Entities\Buildings\ConstructionHut.cs" />
@@ -56,7 +58,6 @@
     <Compile Include="Src\Entities\IBuilding.cs" />
     <Compile Include="Src\Entities\MainBoard.cs" />
     <Compile Include="Src\Entities\Market.cs" />
-    <Compile Include="Src\Entities\PlayerController.cs" />
     <Compile Include="Src\Entities\RoleAction.cs" />
     <Compile Include="Src\Entities\RoleCard.cs" />
     <Compile Include="Src\Entities\Roles.cs" />

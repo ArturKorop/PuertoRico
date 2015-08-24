@@ -1,8 +1,9 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using Core.ActionsData;
+using Core.Entities;
 
-namespace Core.Entities
+namespace Core.Core
 {
     public class PlayerController
     {
