@@ -26,7 +26,7 @@ namespace Test.Entities.Buildings
         [Test]
         public void TestBuildingAction_SmallMarketWithoutColonist()
         {
-            var result = _market.SimulateSellGood(Goods.Corn, _buildings);
+            var result = _market.SimulateSellGoods(Goods.Corn, _buildings);
 
             Assert.AreEqual(0, result);
         }
@@ -35,7 +35,7 @@ namespace Test.Entities.Buildings
         public void TestBuildingAction_SmallMarketWithColonist()
         {
             _smallMarket.AddColonist();
-            var result = _market.SimulateSellGood(Goods.Corn, _buildings);
+            var result = _market.SimulateSellGoods(Goods.Corn, _buildings);
 
             Assert.AreEqual(1, result);
         }
@@ -44,7 +44,7 @@ namespace Test.Entities.Buildings
         public void TestBuildingAction_SmallMarketTooMuchColonists()
         {
             _smallMarket.AddColonist();
-            var result = _market.SimulateSellGood(Goods.Corn, _buildings);
+            var result = _market.SimulateSellGoods(Goods.Corn, _buildings);
 
             Assert.AreEqual(false, _smallMarket.AddColonist());
             Assert.AreEqual(1, result);

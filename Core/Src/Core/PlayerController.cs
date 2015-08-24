@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Core.ActionsData;
@@ -11,7 +12,15 @@ namespace Core.Core
 
         private readonly MainBoard _mainBoard;
 
-        private IEnumerable<IBuilding> Buildings { get { return _player.Board.Buildings; } }
+        private IEnumerable<IBuilding> Buildings
+        {
+            get { return _player.Board.Buildings; }
+        }
+
+        public Player Player
+        {
+            get { return _player; }
+        }
 
         public PlayerController(Player player, MainBoard mainBoard)
         {
@@ -27,25 +36,28 @@ namespace Core.Core
             return result;
         }
 
+        public event EventHandler<Roles> OnSelectRole;
+
         public SimulateTradeActionData SimulateTradeAction()
         {
             var warehouse = _player.Warehouse;
-            int? cornPossiblePrice = CalculateGoodPrice(Goods.Corn);
-            int? indigoPossiblePrice = CalculateGoodPrice(Goods.Indigo);
-            int? sugarPossiblePrice = CalculateGoodPrice(Goods.Sugar);
-            int? tabaccoPossiblePrice = CalculateGoodPrice(Goods.Tabacco);
-            int? coffeePossiblePrice = CalculateGoodPrice(Goods.Coffee);
+            int? cornPossiblePrice = CalculateGoodsPrice(Goods.Corn);
+            int? indigoPossiblePrice = CalculateGoodsPrice(Goods.Indigo);
+            int? sugarPossiblePrice = CalculateGoodsPrice(Goods.Sugar);
+            int? tabaccoPossiblePrice = CalculateGoodsPrice(Goods.Tabacco);
+            int? coffeePossiblePrice = CalculateGoodsPrice(Goods.Coffee);
 
-            var result = new SimulateTradeActionData(cornPossiblePrice, indigoPossiblePrice, sugarPossiblePrice, tabaccoPossiblePrice, coffeePossiblePrice);
+            var result = new SimulateTradeActionData(cornPossiblePrice, indigoPossiblePrice, sugarPossiblePrice,
+                tabaccoPossiblePrice, coffeePossiblePrice);
 
             return result;
         }
 
-        private int? CalculateGoodPrice(Goods type)
+        private int? CalculateGoodsPrice(Goods type)
         {
             var warehouse = _player.Warehouse;
-            int? result = warehouse.GetGoodCount(type) > 0
-                ? _mainBoard.Market.SimulateSellGood(type, Buildings.OfType<BuildingBase<TraderParameters>>())
+            int? result = warehouse.GetGoodsCount(type) > 0
+                ? _mainBoard.Market.SimulateSellGoods(type, Buildings.OfType<BuildingBase<TraderParameters>>())
                 : null;
 
             return result;

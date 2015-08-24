@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 
 namespace Core.Entities
 {
@@ -60,6 +61,25 @@ namespace Core.Entities
         public bool CanBuildIslandObject()
         {
             return _plantations.Count + _quarries.Count < MaxIslandTitles;
+        }
+
+        public string Status()
+        {
+            var builder = new StringBuilder();
+            builder.AppendLine("Board:");
+            builder.AppendLine("Buildings: ");
+            foreach (var building in Buildings)
+            {
+                builder.AppendLine(building.GetType().Name);
+            }
+
+            builder.AppendLine("Plantations: ");
+            foreach (var plantation in Plantations)
+            {
+                builder.AppendLine(plantation.Type.ToString());
+            }
+
+            return builder.ToString();
         }
     }
 }

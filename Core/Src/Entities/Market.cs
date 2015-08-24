@@ -51,7 +51,7 @@ namespace Core.Entities
             return false;
         }
 
-        public int? SimulateSellGood(Goods good, IEnumerable<BuildingBase<TraderParameters>> buildings)
+        public int? SimulateSellGoods(Goods good, IEnumerable<BuildingBase<TraderParameters>> buildings)
         {
             var traderParameters = new TraderParameters();
 
@@ -70,7 +70,7 @@ namespace Core.Entities
 
         public int? SellGood(Goods good, IEnumerable<BuildingBase<TraderParameters>> buildings)
         {
-            var price = SimulateSellGood(good, buildings);
+            var price = SimulateSellGoods(good, buildings);
             if(price.HasValue)
             {
                 _goodsToTrade.Add(good);
