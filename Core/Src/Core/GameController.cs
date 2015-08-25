@@ -7,7 +7,7 @@ namespace Core.Core
 {
     public class GameController
     {
-        private readonly MainBoard _mainBoard;
+        private readonly MainBoardController _mainBoardController;
 
         private readonly List<IPlayerConnection> _connections;
 
@@ -33,13 +33,13 @@ namespace Core.Core
         public GameController(params IPlayerConnection[] connections)
         {
             var playerCount = connections.Length;
-            _mainBoard = new MainBoard(playerCount);
+            _mainBoardController = new MainBoardController(playerCount);
             _connections = Util.Shuffle(connections).ToList();
-            var players = PlayerFactory.GeneratePlayers(_mainBoard, playerCount,
+            var players = PlayerStatusFactory.GeneratePlayers(_mainBoardController, playerCount,
                 _connections.Select(x => x.Name).ToArray());
             for (int i = 0; i < playerCount; i++)
             {
-                var controller = new PlayerController(players[i], _mainBoard);
+                var controller = new PlayerController(players[i], _mainBoardController);
                 _connections[i].Init(controller);
             }
 

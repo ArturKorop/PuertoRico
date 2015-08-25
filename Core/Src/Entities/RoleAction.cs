@@ -2,7 +2,7 @@
 {
     public class RoleAction
     {
-        public void TradeAction(Market mainBoardMarket, Player player)
+        public void TradeAction(Market mainBoardMarket, PlayerStatus playerStatus)
         {
 
         }

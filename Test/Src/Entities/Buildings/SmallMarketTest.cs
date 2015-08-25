@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Core.ActionsData;
 using Core.Entities;
 using Core.Entities.Buildings;
@@ -34,20 +35,20 @@ namespace Test.Entities.Buildings
         [Test]
         public void TestBuildingAction_SmallMarketWithColonist()
         {
-            _smallMarket.AddColonist();
+            _smallMarket.ReceiveColonist();
             var result = _market.SimulateSellGoods(Goods.Corn, _buildings);
 
             Assert.AreEqual(1, result);
         }
 
         [Test]
+        [ExpectedException(typeof(InvalidOperationException))]
         public void TestBuildingAction_SmallMarketTooMuchColonists()
         {
-            _smallMarket.AddColonist();
+            _smallMarket.ReceiveColonist();
             var result = _market.SimulateSellGoods(Goods.Corn, _buildings);
 
-            Assert.AreEqual(false, _smallMarket.AddColonist());
-            Assert.AreEqual(1, result);
+            _smallMarket.ReceiveColonist();
         }
     }
 }

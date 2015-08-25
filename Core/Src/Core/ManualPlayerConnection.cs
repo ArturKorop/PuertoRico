@@ -6,7 +6,7 @@ namespace Core.Core
 
         public string Name { get; private set; }
 
-        public int Id { get { return _controller.Player.Id; } }
+        public int Id { get { return _controller.PlayerStatus.Id; } }
         public Manager Manager { get; private set; }
 
         public ManualPlayerConnection(string name)
@@ -22,7 +22,7 @@ namespace Core.Core
 
         public string Status()
         {
-            return _controller.Player.Status();
+            return _controller.PlayerStatus.Status();
         }
     }
 }

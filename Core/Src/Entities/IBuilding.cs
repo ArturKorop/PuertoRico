@@ -1,6 +1,6 @@
 namespace Core.Entities
 {
-    public interface IBuilding
+    public interface IBuilding : IColonistsHolder
     {
         int Cost { get; }
 
@@ -9,15 +9,5 @@ namespace Core.Entities
         int Size { get; }
 
         int Discount { get; }
-
-        int MaxColonistsCount { get; }
-
-        int CurrentColonistsCount { get; }
-
-        bool CanDoAction { get; }
-
-        bool AddColonist();
-
-        bool RemoveColonist();
     }
 }

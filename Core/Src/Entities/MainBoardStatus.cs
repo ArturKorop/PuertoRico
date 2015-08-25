@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using Core.Entities.IslandObjects;
 using Core.Utils;
 
 namespace Core.Entities
 {
-    public class MainBoard
+    public class MainBoardStatus
     {
         public int OpenPlantationsCount { get; private set; }
 
@@ -18,7 +19,7 @@ namespace Core.Entities
 
         public int Doubloons { get; set; }
 
-        public int Colonists { get; private set; }
+        public ColonistsWarehouse Colonists { get; private set; }
 
         public Dictionary<IBuilding, int> Buildings { get; set; }
 
@@ -32,7 +33,9 @@ namespace Core.Entities
 
         public List<RoleCard> RoleCards { get; private set; }
 
-        public MainBoard(int playersCount)
+        public ColonistsWarehouse AvailableColonists { get; private set; }
+
+        public MainBoardStatus(int playersCount)
         {
             PlayersCount = playersCount;
             OpenPlantationsCount = PlayersCount + 1;
@@ -61,9 +64,12 @@ namespace Core.Entities
 
             Ships = MainFactory.GenerateShips(Constants.ShipsByPlayers[PlayersCount]);
 
-            Colonists = Constants.ColonistsByPlayers[PlayersCount];
+            Colonists = new ColonistsWarehouse(); 
+            Colonists.ReceiveColonist(Constants.ColonistsByPlayers[PlayersCount]);
 
             RoleCards = MainFactory.GenerateRoleCards(Constants.RolesByPlayers[PlayersCount]);
+
+            Colonists.Move(AvailableColonists, PlayersCount);
         }
 
         private void UpdateCurrentPlantations()
@@ -84,17 +90,31 @@ namespace Core.Entities
 
             return result;
         }
+    }
+
+    public class MainBoardController
+    {
+        private readonly MainBoardStatus _status;
+
+        public MainBoardController(int playersCount)
+        {
+            _status = new MainBoardStatus(playersCount);
+        }
+
+        //Todo: implement clone
+        public MainBoardStatus Status { get { return _status; } }
 
         public int TakeDoubloons(int doubloons)
         {
-            if (Doubloons < doubloons)
+            if (_status.Doubloons < doubloons)
             {
                 throw new InvalidOperationException("Too less doubloons");
             }
 
-            Doubloons -= doubloons;
+            _status.Doubloons -= doubloons;
 
             return doubloons;
         }
+
     }
 }

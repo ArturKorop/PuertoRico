@@ -14,7 +14,7 @@ namespace Core.Core
 
         public PlayerBoard Board
         {
-            get { return _controller.Player.Board; }
+            get { return _controller.PlayerStatus.Board; }
         }
 
         public bool IsGameEnd

@@ -8,24 +8,40 @@ namespace Core.Core
 {
     public class PlayerController
     {
-        private readonly Player _player;
+        private readonly PlayerStatus _playerStatus;
 
-        private readonly MainBoard _mainBoard;
+        private readonly MainBoardController _mainBoardController;
 
         private IEnumerable<IBuilding> Buildings
         {
-            get { return _player.Board.Buildings; }
+            get { return _playerStatus.Board.Buildings; }
         }
 
-        public Player Player
+        public PlayerStatus PlayerStatus
         {
-            get { return _player; }
+            get { return _playerStatus; }
         }
 
-        public PlayerController(Player player, MainBoard mainBoard)
+        public PlayerController(PlayerStatus playerStatus, MainBoardController mainBoardController)
         {
-            _player = player;
-            _mainBoard = mainBoard;
+            _playerStatus = playerStatus;
+            _mainBoardController = mainBoardController;
+        }
+
+        public void DoMayorAction(MayorActionParameter parameter)
+        {
+            if (parameter.IsRoleOwner)
+            {
+                _mainBoardController.Status.Colonists.Move(_playerStatus.Board.ColonistsWarehouse);
+            }
+
+            var newColonistsCount = _mainBoardController.Status.AvailableColonists.CurrentColonistsCount;
+            var playerNewColonists = (newColonistsCount%_mainBoardController.Status.PlayersCount) == 0
+                ? 0
+                : 1 +
+                  newColonistsCount/_mainBoardController.Status.PlayersCount;
+            _mainBoardController.Status.AvailableColonists.Move(_playerStatus.Board.ColonistsWarehouse,
+                playerNewColonists);
         }
 
         public SimulateSettlerActionData SimulateSettlerAction()
@@ -36,11 +52,9 @@ namespace Core.Core
             return result;
         }
 
-        public event EventHandler<Roles> OnSelectRole;
-
         public SimulateTradeActionData SimulateTradeAction()
         {
-            var warehouse = _player.Warehouse;
+            var warehouse = _playerStatus.Warehouse;
             int? cornPossiblePrice = CalculateGoodsPrice(Goods.Corn);
             int? indigoPossiblePrice = CalculateGoodsPrice(Goods.Indigo);
             int? sugarPossiblePrice = CalculateGoodsPrice(Goods.Sugar);
@@ -55,9 +69,10 @@ namespace Core.Core
 
         private int? CalculateGoodsPrice(Goods type)
         {
-            var warehouse = _player.Warehouse;
+            var warehouse = _playerStatus.Warehouse;
             int? result = warehouse.GetGoodsCount(type) > 0
-                ? _mainBoard.Market.SimulateSellGoods(type, Buildings.OfType<BuildingBase<TraderParameters>>())
+                ? _mainBoardController.Status.Market.SimulateSellGoods(type,
+                    Buildings.OfType<BuildingBase<TraderParameters>>())
                 : null;
 
             return result;
@@ -74,8 +89,8 @@ namespace Core.Core
             data.CanTakeAdditionalColonist = settlerParameters.CanTakeAdditionalColonist;
             data.CanTakeAdditionalPlantation = settlerParameters.CanTakeAdditionalPlantation;
             data.CanTakeQuarryInsteadPlantation = settlerParameters.CanTakeQuarryInsteadPlantation;
-            data.AvailablePlantations = _mainBoard.AvailablePlantations;
-            data.AvailableQuarryCount = _mainBoard.Quarries.Count;
+            data.AvailablePlantations = _mainBoardController.Status.AvailablePlantations;
+            data.AvailableQuarryCount = _mainBoardController.Status.Quarries.Count;
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Core.Entities.IslandObjects;
 
 namespace Core.Entities
 {
@@ -12,21 +13,42 @@ namespace Core.Entities
 
         private readonly List<IBuilding> _buildings;
 
-        public IEnumerable<IBuilding> Buildings { get { return _buildings; } }
+        public IEnumerable<IBuilding> Buildings
+        {
+            get { return _buildings; }
+        }
 
         private readonly List<Plantation> _plantations;
 
-        public IEnumerable<Plantation> Plantations { get { return _plantations; } }
+        public IEnumerable<Plantation> Plantations
+        {
+            get { return _plantations; }
+        }
 
         private readonly List<Quarry> _quarries;
 
-        public IEnumerable<Quarry> Quarries { get { return _quarries; } }
+        public IEnumerable<Quarry> Quarries
+        {
+            get { return _quarries; }
+        }
+
+        public ColonistsWarehouse ColonistsWarehouse { get; private set; }
+
+        public int Colonists
+        {
+            get
+            {
+                return ColonistsWarehouse.CurrentColonistsCount + Buildings.Sum(x => x.CurrentColonistsCount) +
+                       Plantations.Sum(x => x.CurrentColonistsCount) + Quarries.Sum(x => x.CurrentColonistsCount);
+            }
+        }
 
         public PlayerBoard()
         {
             _buildings = new List<IBuilding>();
             _plantations = new List<Plantation>();
             _quarries = new List<Quarry>();
+            ColonistsWarehouse = new ColonistsWarehouse();
         }
 
         public void BuildBuilding(IBuilding building)
@@ -39,7 +61,7 @@ namespace Core.Entities
 
         public void BuildQuarry(Quarry quarry)
         {
-            if(CanBuildIslandObject())
+            if (CanBuildIslandObject())
             {
                 _quarries.Add(quarry);
             }
@@ -47,7 +69,7 @@ namespace Core.Entities
 
         public void BuildPlantation(Plantation plantation)
         {
-            if(CanBuildIslandObject())
+            if (CanBuildIslandObject())
             {
                 _plantations.Add(plantation);
             }
