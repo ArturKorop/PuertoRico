@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Core.Entities.Interfaces;
 using Core.Entities.IslandObjects;
 using Core.Utils;
 

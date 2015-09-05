@@ -1,4 +1,5 @@
-﻿using Core.ActionsData;
+﻿using Core.Entities.Base;
+using Core.Entities.RoleParameters;
 
 namespace Core.Entities.Buildings
 {

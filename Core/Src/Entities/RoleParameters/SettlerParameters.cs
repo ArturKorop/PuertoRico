@@ -1,4 +1,4 @@
-﻿namespace Core.ActionsData
+﻿namespace Core.Entities.RoleParameters
 {
     public struct SettlerParameters
     {

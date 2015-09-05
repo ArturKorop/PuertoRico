@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using Core.Entities;
 
-namespace Core.Entities
+namespace Core.Utils
 {
     public static class Constants
     {

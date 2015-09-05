@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Core.Entities;
+using Core.PlayerCore;
 using Core.Utils;
 
 namespace Core.Core
@@ -23,7 +25,7 @@ namespace Core.Core
         {
             get
             {
-                return _connections.Any(x => x.Manager.IsGameEnd);
+                throw new NotImplementedException();
             }
         }
 
@@ -34,11 +36,6 @@ namespace Core.Core
             _connections = Util.Shuffle(connections).ToList();
             var players = PlayerStatusFactory.GeneratePlayers(_mainBoardController, playerCount,
                 _connections.Select(x => x.Name).ToArray());
-            for (int i = 0; i < playerCount; i++)
-            {
-                var controller = new PlayerController(players[i], _mainBoardController);
-                _connections[i].Init(controller);
-            }
 
             _governer = 0;
             _currentPlayer = _connections.Single(x=>x.Id == _governer);
@@ -55,31 +52,7 @@ namespace Core.Core
 
         private void PlayRound()
         {
-            var role = _currentPlayer.Manager.PlayFirstRoundTurn();
-            var nextPlayer = GetNextPlayer(_currentPlayer);
-            while (nextPlayer != null)
-            {
-                nextPlayer.Manager.PlayRoundTurn(role);
-                nextPlayer = GetNextPlayer(nextPlayer);
-            }
-        }
-
-        private IPlayerConnection GetNextPlayer(IPlayerConnection currentPlayer)
-        {
-            var firstPlayerOrder = _currentPlayer.Id;
-            var currentPlayerOrder = currentPlayer.Id;
-            int nextPlayerOrder = currentPlayerOrder + 1;
-            if (nextPlayerOrder == PlayersCount)
-            {
-                nextPlayerOrder = 0;
-            }
-
-            if (nextPlayerOrder == firstPlayerOrder)
-            {
-                return null;
-            }
-
-            return _connections.Single(x => x.Id == nextPlayerOrder);
+            throw new NotImplementedException();
         }
     }
 }

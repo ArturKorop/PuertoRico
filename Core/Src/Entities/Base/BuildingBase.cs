@@ -1,6 +1,7 @@
 ﻿using System;
+using Core.Entities.Interfaces;
 
-namespace Core.Entities
+namespace Core.Entities.Base
 {
     public abstract class BuildingBase<T> : ColonistsHolderBase, IBuilding
     {

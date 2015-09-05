@@ -47,7 +47,7 @@ namespace Core.Entities
             var builder = new StringBuilder();
             builder.AppendFormat("Id: {0}; Name: {1}\n", Id, Name);
             builder.AppendFormat("Vp: {0}; Doubloons: {1}\n", Vp, Doubloons);
-            builder.AppendFormat("Colonists: {0};\n", Board.Colonists);
+            builder.AppendFormat("Colonists: {0};\n", Board.TotalColonists);
             builder.AppendLine(Warehouse.Status());
             builder.AppendLine(Board.Status());
 

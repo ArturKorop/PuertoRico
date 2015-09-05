@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Core.Entities.Interfaces;
 using Core.Entities.IslandObjects;
 
 namespace Core.Entities
@@ -9,32 +10,23 @@ namespace Core.Entities
     {
         public const int MaxBuildingTitles = 12;
 
-        public const int MaxIslandTitles = 12;
+        public const int MaxIslandObjects = 12;
 
         private readonly List<IBuilding> _buildings;
 
-        public IEnumerable<IBuilding> Buildings
-        {
-            get { return _buildings; }
-        }
+        public IEnumerable<IBuilding> Buildings => _buildings;
 
         private readonly List<Plantation> _plantations;
 
-        public IEnumerable<Plantation> Plantations
-        {
-            get { return _plantations; }
-        }
+        public IEnumerable<Plantation> Plantations => _plantations;
 
         private readonly List<Quarry> _quarries;
 
-        public IEnumerable<Quarry> Quarries
-        {
-            get { return _quarries; }
-        }
+        public IEnumerable<Quarry> Quarries => _quarries;
 
         public ColonistsWarehouse ColonistsWarehouse { get; }
 
-        public int Colonists
+        public int TotalColonists
         {
             get
             {
@@ -82,7 +74,7 @@ namespace Core.Entities
 
         public bool CanBuildIslandObject()
         {
-            return _plantations.Count + _quarries.Count < MaxIslandTitles;
+            return this.IslandObjectsCount() < MaxIslandObjects;
         }
 
         public string Status()
@@ -104,4 +96,13 @@ namespace Core.Entities
             return builder.ToString();
         }
     }
+
+    public static class PlayerBoardExtensions
+    {
+        public static int IslandObjectsCount(this PlayerBoard board)
+        {
+            return board.Plantations.Count() + board.Quarries.Count();
+        }
+    }
+
 }

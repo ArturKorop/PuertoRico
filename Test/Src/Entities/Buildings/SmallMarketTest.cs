@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using Core.ActionsData;
 using Core.Entities;
+using Core.Entities.Base;
 using Core.Entities.Buildings;
+using Core.Entities.RoleParameters;
 using NUnit.Framework;
 
 namespace Test.Entities.Buildings

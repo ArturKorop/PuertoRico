@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Core.ActionsData;
+using Core.Entities.Base;
+using Core.Entities.RoleParameters;
 
 namespace Core.Entities
 {

@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using Core.Entities;
 
-namespace Core.Core
+namespace Core.PlayerCore
 {
     public interface IPlayerConnection
     {
