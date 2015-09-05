@@ -1,10 +1,17 @@
+using System.Collections.Generic;
+using Core.Entities;
+
 namespace Core.Core
 {
     public interface IPlayerConnection
     {
-        void Init(PlayerController playerController);
         string Name { get; }
         int Id { get; }
-        Manager Manager { get; }
+
+        PlayerTurnAction DoTurn(Roles role, bool isHasPrivilage, PlayerStatus status, MainBoardStatus board,
+            PlayerStatus[] opponents);
+
+        Roles SelectRole(PlayerStatus status, MainBoardStatus board, PlayerStatus[] opponents);
+        void GameEnd(Dictionary<int, int> playersScore);
     }
 }

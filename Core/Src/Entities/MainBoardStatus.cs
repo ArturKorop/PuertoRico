@@ -7,9 +7,9 @@ namespace Core.Entities
 {
     public class MainBoardStatus
     {
-        public int OpenPlantationsCount { get; private set; }
+        public int OpenPlantationsCount { get; }
 
-        public int PlayersCount { get; private set; }
+        public int PlayersCount { get; }
 
         public Market Market { get; set; }
 

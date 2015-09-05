@@ -1,25 +1,28 @@
-﻿using System.Text;
+﻿using System;
+using System.Text;
 
 namespace Core.Entities
 {
     public class PlayerStatus
     {
-        public int Id { get; private set; }
+        public int Id { get; }
 
-        public string Name { get; private set; }
+        public string Name { get; }
 
-        public int Vp { get; set; }
+        public int Vp { get; }
 
-        public int Doubloons { get; set; }
+        public int Doubloons { get; private set; }
 
-        public PlayerBoard Board { get; set; }
+        public PlayerBoard Board { get; }
 
-        public Warehouse Warehouse { get; set; }
+        public Warehouse Warehouse { get; }
 
         public PlayerStatus(int id, string name)
         {
             Id = id;
             Name = name;
+            Vp = 0;
+            Doubloons = 0;
             Board = new PlayerBoard();
             Warehouse = new Warehouse();
         }
@@ -27,6 +30,16 @@ namespace Core.Entities
         public void ReceiveDoubloons(int doubloons)
         {
             Doubloons += doubloons;
+        }
+
+        public void PayDoubloons(int doubloons)
+        {
+            if (doubloons > Doubloons)
+            {
+                throw new InvalidOperationException("Too less doubloons");
+            }
+
+            Doubloons -= doubloons;
         }
 
         public string Status()

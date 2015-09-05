@@ -6,7 +6,7 @@
 
         private Goods? _goodsType;
 
-        public int Space { get; private set; }
+        public int Space { get; }
 
         public int FreeSpace
         {

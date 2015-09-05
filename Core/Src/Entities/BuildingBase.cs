@@ -1,4 +1,6 @@
-﻿namespace Core.Entities
+﻿using System;
+
+namespace Core.Entities
 {
     public abstract class BuildingBase<T> : ColonistsHolderBase, IBuilding
     {
@@ -20,10 +22,12 @@
 
         public virtual void DoAction(ref T parameters)
         {
-            if (ActivePoints > 0)
+            if (ActivePoints == 0)
             {
-                DoActionImpl(ref parameters);
+                throw new InvalidOperationException("Too less colonists");
             }
+
+            DoActionImpl(ref parameters);
         }
 
         protected abstract void DoActionImpl(ref T parameters);

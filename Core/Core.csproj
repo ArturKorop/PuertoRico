@@ -49,7 +49,7 @@
     <Compile Include="Src\Core\GameState.cs" />
     <Compile Include="Src\Core\IPlayerConnection.cs" />
     <Compile Include="Src\Core\Manager.cs" />
-    <Compile Include="Src\Core\ManualPlayerConnection.cs" />
+    <Compile Include="Src\Core\PlayerConnection.cs" />
     <Compile Include="Src\Core\PlayerController.cs" />
     <Compile Include="Src\Core\PlayerStatusFactory.cs" />
     <Compile Include="Src\Entities\BuildingBase.cs" />

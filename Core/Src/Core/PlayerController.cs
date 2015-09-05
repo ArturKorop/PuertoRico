@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using Core.ActionsData;
@@ -28,7 +27,12 @@ namespace Core.Core
             _mainBoardController = mainBoardController;
         }
 
-        public void DoMayorAction(MayorActionParameter parameter)
+        public PlayerTurnAction DoTurn(Roles status, bool isHasPrivilage, PlayerStatus opponents, MainBoardStatus board, PlayerStatus[] playerStatuses)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        private void DoMayorAction(MayorActionParameter parameter)
         {
             if (parameter.IsRoleOwner)
             {
@@ -44,7 +48,7 @@ namespace Core.Core
                 playerNewColonists);
         }
 
-        public SimulateSettlerActionData SimulateSettlerAction()
+        private SimulateSettlerActionData SimulateSettlerAction()
         {
             var result = new SimulateSettlerActionData();
             UpdateSettlerData(ref result);
@@ -52,7 +56,7 @@ namespace Core.Core
             return result;
         }
 
-        public SimulateTradeActionData SimulateTradeAction()
+        private SimulateTradeActionData SimulateTradeAction()
         {
             var warehouse = _playerStatus.Warehouse;
             int? cornPossiblePrice = CalculateGoodsPrice(Goods.Corn);
@@ -92,5 +96,9 @@ namespace Core.Core
             data.AvailablePlantations = _mainBoardController.Status.AvailablePlantations;
             data.AvailableQuarryCount = _mainBoardController.Status.Quarries.Count;
         }
+    }
+
+    public class PlayerTurnAction
+    {
     }
 }

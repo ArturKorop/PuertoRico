@@ -11,16 +11,13 @@ namespace Core.Core
 
         private readonly List<IPlayerConnection> _connections;
 
-        private int _governer;
+        private readonly int _governer;
 
-        private IPlayerConnection _currentPlayer;
+        private readonly IPlayerConnection _currentPlayer;
 
         private int _previousPlayer;
 
-        public int PlayersCount
-        {
-            get { return _connections.Count; }
-        }
+        public int PlayersCount => _connections.Count;
 
         public bool IsGameEnd
         {

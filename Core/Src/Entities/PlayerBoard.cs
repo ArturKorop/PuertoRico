@@ -32,7 +32,7 @@ namespace Core.Entities
             get { return _quarries; }
         }
 
-        public ColonistsWarehouse ColonistsWarehouse { get; private set; }
+        public ColonistsWarehouse ColonistsWarehouse { get; }
 
         public int Colonists
         {

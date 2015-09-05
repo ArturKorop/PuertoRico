@@ -4,7 +4,7 @@ namespace Core.Entities
 {
     public class RoleCard
     {
-        public Roles Role { get; private set; }
+        public Roles Role { get; }
 
         public bool IsUsed { get; private set; }
 

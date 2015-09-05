@@ -4,7 +4,9 @@ namespace Core.Entities
 {
     public class ColonistsHolderBase : IColonistsHolder
     {
-        public int MaxColonistsCount { get; private set; }
+        public int MaxColonistsCount { get; }
+
+        public int ActivePoints => CurrentColonistsCount;
 
         public int CurrentColonistsCount { get; private set; }
 
@@ -35,9 +37,5 @@ namespace Core.Entities
             }
         }
 
-        public int ActivePoints
-        {
-            get { return CurrentColonistsCount; }
-        }
     }
 }
