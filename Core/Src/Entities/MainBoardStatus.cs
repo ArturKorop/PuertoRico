@@ -34,7 +34,7 @@ namespace Core.Entities
 
         public List<RoleCard> RoleCards { get; private set; }
 
-        public ColonistsWarehouse AvailableColonists { get; private set; }
+        public ColonistsWarehouse AvailableColonists { get; } = new ColonistsWarehouse();
 
         public MainBoardStatus(int playersCount)
         {

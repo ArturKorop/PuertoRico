@@ -8,11 +8,11 @@ namespace ConsoleUI
     {
         private static void Main(string[] args)
         {
-            var connector1 = new ManualPlayerConnection("Artur", 0);
-            var connector2 = new ManualPlayerConnection("Stepan", 1);
-            var connector3 = new ManualPlayerConnection("Petro", 2);
+            var connector1 = new ManualPlayerConnection("Artur");
+            var connector2 = new Bot("Stepan");
+            var connector3 = new Bot("Petro");
 
-            var game = new GameController(connector1, connector2, connector3);
+            var game = new GameController(new ConsoleVisualizer(), connector1, connector2, connector3);
 
             game.Start();
 

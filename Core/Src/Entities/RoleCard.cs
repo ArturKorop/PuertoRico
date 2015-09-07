@@ -1,4 +1,5 @@
 using System;
+using System.Runtime.Remoting.Channels;
 
 namespace Core.Entities
 {
@@ -29,6 +30,35 @@ namespace Core.Entities
             Doubloons = 0;
 
             return new Tuple<Roles, int>(Role, doubloons);
+        }
+    }
+
+    public static class RoleCardsExtensions
+    {
+        public static bool IsRequiredAllPlayerActions(this RoleCard card)
+        {
+            switch (card.Role)
+            {
+                case Roles.Builder:
+                case Roles.Captain:
+                case Roles.Mayor:
+                case Roles.Settler:
+                case Roles.Trader:
+                    return true;
+                default:
+                    return false;
+            }
+        }
+
+        public static bool IsRequiredCurrentPlayerAction(this RoleCard card)
+        {
+            switch (card.Role)
+            {
+                    case Roles.Craftsman:
+                    return true;
+                default:
+                    return false;
+            }
         }
     }
 }

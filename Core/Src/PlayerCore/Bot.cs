@@ -13,22 +13,19 @@ namespace Core.PlayerCore
     {
         public string Name { get; }
 
-        public int Id { get; }
-
-        public Bot(int id, string name)
+        public Bot(string name)
         {
             Name = name;
-            Id = id;
         }
 
         public PlayerTurnAction DoTurn(Roles status, bool isHasPrivilage, PlayerStatus opponents, MainBoardStatus board, PlayerStatus[] playerStatuses)
         {
-            throw new NotImplementedException();
+            return new PlayerTurnAction();
         }
 
-        public Roles SelectRole(PlayerStatus status, MainBoardStatus board, PlayerStatus[] opponents)
+        public RoleCard SelectRole(List<RoleCard> cards, PlayerStatus status, MainBoardStatus board, PlayerStatus[] opponents)
         {
-            throw new NotImplementedException();
+            return cards.First();
         }
 
         public void GameEnd(Dictionary<int, int> playersScore)
