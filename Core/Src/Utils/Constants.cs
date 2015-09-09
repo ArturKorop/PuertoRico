@@ -98,4 +98,9 @@ namespace Core.Utils
             {new Tuple<int, int>(5, 5), Goods.Corn},
         };
     }
+
+    public class GameConstants
+    {
+        public const int ProspectorMoney = 1;
+    }
 }

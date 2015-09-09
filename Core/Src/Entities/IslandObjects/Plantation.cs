@@ -2,7 +2,7 @@
 
 namespace Core.Entities.IslandObjects
 {
-    public class Plantation : ColonistsHolderBase
+    public class Plantation : ColonistsHolderBase, IISlandObject
     {
         public Goods Type { get; private set; }
 
@@ -10,5 +10,10 @@ namespace Core.Entities.IslandObjects
         {
             Type = type;
         }
+    }
+
+    public interface IISlandObject
+    {
+        
     }
 }

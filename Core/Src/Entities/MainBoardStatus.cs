@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Core.Entities.Interfaces;
 using Core.Entities.IslandObjects;
 using Core.Utils;
@@ -103,7 +104,7 @@ namespace Core.Entities
         }
 
         //Todo: implement clone
-        public MainBoardStatus Status { get { return _status; } }
+        public MainBoardStatus Status => _status;
 
         public int TakeDoubloons(int doubloons)
         {
@@ -117,5 +118,17 @@ namespace Core.Entities
             return doubloons;
         }
 
+        public void ReceiveDoubloons(int doubloons)
+        {
+            _status.Doubloons += doubloons;
+        }
+
+        public bool TryGetRoleCard(Roles currentRole, out RoleCard roleCard)
+        {
+            // TODO: add find with max money
+            roleCard  = _status.RoleCards.FirstOrDefault(x => x.Role == currentRole && !x.IsUsed);
+
+            return roleCard != null;
+        }
     }
 }

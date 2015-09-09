@@ -2,7 +2,7 @@
 
 namespace Core.Entities.IslandObjects
 {
-    public class Quarry : ColonistsHolderBase
+    public class Quarry : ColonistsHolderBase, IISlandObject
     {
         public Quarry() : base(1)
         {

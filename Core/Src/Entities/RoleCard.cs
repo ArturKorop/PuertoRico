@@ -1,21 +1,27 @@
 using System;
-using System.Runtime.Remoting.Channels;
 
 namespace Core.Entities
 {
-    public class RoleCard
+    public class RoleCardStatus
     {
         public Roles Role { get; }
 
-        public bool IsUsed { get; private set; }
+        public int Doubloons { get; protected set; }
 
-        public int Doubloons { get; private set; }
-
-        public RoleCard(Roles role)
+        public RoleCardStatus(Roles role)
         {
             Role = role;
-            IsUsed = false;
             Doubloons = 0;
+        }
+    }
+
+    public class RoleCard : RoleCardStatus
+    {
+        public bool IsUsed { get; private set; }
+
+        public RoleCard(Roles role) : base(role)
+        {
+            IsUsed = false;
         }
 
         public Tuple<Roles, int> Take()
@@ -31,11 +37,19 @@ namespace Core.Entities
 
             return new Tuple<Roles, int>(Role, doubloons);
         }
+
+        public void NextRound()
+        {
+            if (!IsUsed)
+            {
+                Doubloons++;
+            }
+        }
     }
 
     public static class RoleCardsExtensions
     {
-        public static bool IsRequiredAllPlayerActions(this RoleCard card)
+        public static bool IsRequiredAllPlayerActions(this RoleCardStatus card)
         {
             switch (card.Role)
             {
@@ -50,11 +64,11 @@ namespace Core.Entities
             }
         }
 
-        public static bool IsRequiredCurrentPlayerAction(this RoleCard card)
+        public static bool IsRequiredCurrentPlayerAction(this RoleCardStatus card)
         {
             switch (card.Role)
             {
-                    case Roles.Craftsman:
+                case Roles.Craftsman:
                     return true;
                 default:
                     return false;

@@ -5,6 +5,7 @@ using Core.ActionsData;
 using Core.Entities;
 using Core.Entities.Base;
 using Core.Entities.Interfaces;
+using Core.Entities.IslandObjects;
 using Core.Entities.RoleParameters;
 
 namespace Core.PlayerCore
@@ -13,24 +14,62 @@ namespace Core.PlayerCore
     {
         public string Name { get; }
 
-        public Bot(string name)
+        public RoleCardStatus SelectRole(List<RoleCardStatus> cards, PlayerStatus status, MainBoardStatus board, IEnumerable<PlayerStatus> opponents)
         {
-            Name = name;
+            throw new NotImplementedException();
         }
 
-        public PlayerTurnAction DoTurn(Roles status, bool isHasPrivilage, PlayerStatus opponents, MainBoardStatus board, PlayerStatus[] playerStatuses)
+        public IBuilding SelectBuildingToBuild(bool isHasPrivilage, PlayerStatus status, Dictionary<IBuilding, int> availableBuildings, IEnumerable<PlayerStatus> opponents)
         {
-            return new PlayerTurnAction();
+            throw new NotImplementedException();
         }
 
-        public RoleCard SelectRole(List<RoleCard> cards, PlayerStatus status, MainBoardStatus board, PlayerStatus[] opponents)
+        public MoveDirection MoveColonist(bool isHasPrivilage, PlayerStatus status, IEnumerable<IBuilding> availableBuildings,
+            IEnumerable<PlayerStatus> opponents)
         {
-            return cards.First();
+            throw new NotImplementedException();
+        }
+
+        public Goods? SelectGoodsToTrade(bool isHasPrivilage, PlayerStatus status, IEnumerable<IBuilding> availableBuildings,
+            IEnumerable<PlayerStatus> opponents)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Goods SelectAdditionalGoods(PlayerStatus status, IEnumerable<IBuilding> availableBuildings, IEnumerable<PlayerStatus> opponents)
+        {
+            throw new NotImplementedException();
+        }
+
+        public IEnumerable<IISlandObject> SelectISlandObjects(bool isHasPrivilage, PlayerStatus status, IEnumerable<IBuilding> availableBuildings,
+            IEnumerable<PlayerStatus> opponents)
+        {
+            throw new NotImplementedException();
+        }
+
+        public GoodsToShip SelectGoodsToShip(PlayerStatus status, IEnumerable<IBuilding> availableBuildings, IEnumerable<PlayerStatus> opponents)
+        {
+            throw new NotImplementedException();
+        }
+
+        public IEnumerable<Goods> SelectGoodsToWarehouse(PlayerStatus status, IEnumerable<IBuilding> availableBuildings, IEnumerable<PlayerStatus> opponents)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Goods? SelectOneGoodsToStore(PlayerStatus status, IEnumerable<IBuilding> availableBuildings, IEnumerable<PlayerStatus> opponents)
+        {
+            throw new NotImplementedException();
         }
 
         public void GameEnd(Dictionary<int, int> playersScore)
         {
             throw new NotImplementedException();
+        }
+
+        public Bot(string name)
+        {
+            Name = name;
         }
 
         private SimulateSettlerActionData SimulateSettlerAction()
@@ -80,5 +119,6 @@ namespace Core.PlayerCore
 
     public class PlayerTurnAction
     {
+        public object BuilderAction { get; set; }
     }
 }

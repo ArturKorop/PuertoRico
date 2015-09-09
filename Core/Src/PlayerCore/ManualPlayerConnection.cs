@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Core.Entities;
+using Core.Entities.Interfaces;
+using Core.Entities.IslandObjects;
 
 namespace Core.PlayerCore
 {
@@ -14,15 +16,7 @@ namespace Core.PlayerCore
             Name = name;
         }
 
-        public PlayerTurnAction DoTurn(Roles role, bool isHasPrivilage, PlayerStatus status, MainBoardStatus board,
-            PlayerStatus[] opponents)
-        {
-            Console.WriteLine(role);
-
-            return new PlayerTurnAction();
-        }
-
-        public RoleCard SelectRole(List<RoleCard> cards, PlayerStatus status, MainBoardStatus board, PlayerStatus[] opponents)
+        public RoleCardStatus SelectRole(List<RoleCardStatus> cards, PlayerStatus status, MainBoardStatus board, IEnumerable<PlayerStatus> opponents)
         {
             cards.Select(x=>x.Role).PE();
 
@@ -46,6 +40,49 @@ namespace Core.PlayerCore
                 default:
                     throw new InvalidOperationException("Invorrect role");
             }
+        }
+
+        public IBuilding SelectBuildingToBuild(bool isHasPrivilage, PlayerStatus status, Dictionary<IBuilding, int> availableBuildings, IEnumerable<PlayerStatus> opponents)
+        {
+            throw new NotImplementedException();
+        }
+
+        public MoveDirection MoveColonist(bool isHasPrivilage, PlayerStatus status, IEnumerable<IBuilding> availableBuildings,
+            IEnumerable<PlayerStatus> opponents)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Goods? SelectGoodsToTrade(bool isHasPrivilage, PlayerStatus status, IEnumerable<IBuilding> availableBuildings,
+            IEnumerable<PlayerStatus> opponents)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Goods SelectAdditionalGoods(PlayerStatus status, IEnumerable<IBuilding> availableBuildings, IEnumerable<PlayerStatus> opponents)
+        {
+            throw new NotImplementedException();
+        }
+
+        public IEnumerable<IISlandObject> SelectISlandObjects(bool isHasPrivilage, PlayerStatus status, IEnumerable<IBuilding> availableBuildings,
+            IEnumerable<PlayerStatus> opponents)
+        {
+            throw new NotImplementedException();
+        }
+
+        public GoodsToShip SelectGoodsToShip(PlayerStatus status, IEnumerable<IBuilding> availableBuildings, IEnumerable<PlayerStatus> opponents)
+        {
+            throw new NotImplementedException();
+        }
+
+        public IEnumerable<Goods> SelectGoodsToWarehouse(PlayerStatus status, IEnumerable<IBuilding> availableBuildings, IEnumerable<PlayerStatus> opponents)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Goods? SelectOneGoodsToStore(PlayerStatus status, IEnumerable<IBuilding> availableBuildings, IEnumerable<PlayerStatus> opponents)
+        {
+            throw new NotImplementedException();
         }
 
         public void GameEnd(Dictionary<int, int> playersScore)
