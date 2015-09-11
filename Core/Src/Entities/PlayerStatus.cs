@@ -32,7 +32,7 @@ namespace Core.Entities
             Doubloons += doubloons;
         }
 
-        public void PayDoubloons(int doubloons)
+        public int PayDoubloons(int doubloons)
         {
             if (doubloons > Doubloons)
             {
@@ -40,6 +40,8 @@ namespace Core.Entities
             }
 
             Doubloons -= doubloons;
+
+            return doubloons;
         }
 
         public string Status()

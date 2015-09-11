@@ -12,61 +12,6 @@ namespace Core.PlayerCore
 {
     public class Bot : IPlayerConnection
     {
-        public string Name { get; }
-
-        public RoleCardStatus SelectRole(List<RoleCardStatus> cards, PlayerStatus status, MainBoardStatus board, IEnumerable<PlayerStatus> opponents)
-        {
-            throw new NotImplementedException();
-        }
-
-        public IBuilding SelectBuildingToBuild(bool isHasPrivilage, PlayerStatus status, Dictionary<IBuilding, int> availableBuildings, IEnumerable<PlayerStatus> opponents)
-        {
-            throw new NotImplementedException();
-        }
-
-        public MoveDirection MoveColonist(bool isHasPrivilage, PlayerStatus status, IEnumerable<IBuilding> availableBuildings,
-            IEnumerable<PlayerStatus> opponents)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Goods? SelectGoodsToTrade(bool isHasPrivilage, PlayerStatus status, IEnumerable<IBuilding> availableBuildings,
-            IEnumerable<PlayerStatus> opponents)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Goods SelectAdditionalGoods(PlayerStatus status, IEnumerable<IBuilding> availableBuildings, IEnumerable<PlayerStatus> opponents)
-        {
-            throw new NotImplementedException();
-        }
-
-        public IEnumerable<IISlandObject> SelectISlandObjects(bool isHasPrivilage, PlayerStatus status, IEnumerable<IBuilding> availableBuildings,
-            IEnumerable<PlayerStatus> opponents)
-        {
-            throw new NotImplementedException();
-        }
-
-        public GoodsToShip SelectGoodsToShip(PlayerStatus status, IEnumerable<IBuilding> availableBuildings, IEnumerable<PlayerStatus> opponents)
-        {
-            throw new NotImplementedException();
-        }
-
-        public IEnumerable<Goods> SelectGoodsToWarehouse(PlayerStatus status, IEnumerable<IBuilding> availableBuildings, IEnumerable<PlayerStatus> opponents)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Goods? SelectOneGoodsToStore(PlayerStatus status, IEnumerable<IBuilding> availableBuildings, IEnumerable<PlayerStatus> opponents)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void GameEnd(Dictionary<int, int> playersScore)
-        {
-            throw new NotImplementedException();
-        }
-
         public Bot(string name)
         {
             Name = name;
@@ -114,6 +59,63 @@ namespace Core.PlayerCore
             data.CanTakeQuarryInsteadPlantation = settlerParameters.CanTakeQuarryInsteadPlantation;
             //data.AvailablePlantations = _mainBoardController.Status.AvailablePlantations;
             //data.AvailableQuarryCount = _mainBoardController.Status.Quarries.Count;
+        }
+
+        public string Name { get; }
+        public RoleCardStatus SelectRole(List<RoleCardStatus> cards, PlayerStatus status, MainBoardStatus board, IEnumerable<PlayerStatus> opponents)
+        {
+            throw new NotImplementedException();
+        }
+
+        public IBuilding SelectBuildingToBuild(bool isHasPrivilage, PlayerStatus status, Dictionary<IBuilding, int> availableBuildings,
+            IEnumerable<PlayerStatus> opponents)
+        {
+            throw new NotImplementedException();
+        }
+
+        public MoveDirection MoveColonist(bool isHasPrivilage, PlayerStatus status, MainBoardStatus board, IEnumerable<PlayerStatus> opponents)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Goods? SelectGoodsToTrade(bool isHasPrivilage, PlayerStatus status, MainBoardStatus board, IEnumerable<PlayerStatus> opponents)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Goods SelectAdditionalGoods(PlayerStatus status, MainBoardStatus board, IEnumerable<PlayerStatus> opponents)
+        {
+            throw new NotImplementedException();
+        }
+
+        public IEnumerable<IISlandObject> SelectISlandObjects(bool isHasPrivilage, PlayerStatus status, MainBoardStatus board, IEnumerable<PlayerStatus> opponents)
+        {
+            throw new NotImplementedException();
+        }
+
+        public GoodsToShip SelectGoodsToShip(PlayerStatus status, MainBoardStatus board, IEnumerable<PlayerStatus> opponents)
+        {
+            throw new NotImplementedException();
+        }
+
+        public IEnumerable<Goods> SelectGoodsForWarehouse(PlayerStatus status, MainBoardStatus board, IEnumerable<PlayerStatus> opponents)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Goods? SelectOneGoodsForStore(PlayerStatus status, IEnumerable<PlayerStatus> opponents)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool IsUsePrivilage(PlayerStatus status, MainBoardStatus mainBoardStatus, IEnumerable<PlayerStatus> opponents)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void GameEnd(Dictionary<int, int> playersScore)
+        {
+            throw new NotImplementedException();
         }
     }
 

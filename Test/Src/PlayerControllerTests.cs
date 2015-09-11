@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using Core.Core;
 using Core.Entities;
+using Core.Entities.Buildings;
 using NUnit.Framework;
 
 namespace Test
@@ -16,7 +17,12 @@ namespace Test
             var mainBoardController = new MainBoardController(4);
             var playerController = new PlayerController(mainBoardController, status);
 
-            var result = playerController.DoSelectBuildingToBuild(mainBoardController.Status.Buildings.First().Key);
+            var university = new University();
+            university.ReceiveColonist();
+
+            status.Board.BuildBuilding(university);
+
+            var result = playerController.DoSelectBuildingToBuild(mainBoardController.Status.Buildings.First().Key, true);
 
             Assert.IsTrue(result);
         }

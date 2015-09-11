@@ -44,9 +44,17 @@ namespace Core.Entities
             InitStartState();
         }
 
-        public void ReturnGoods(IEnumerable<Goods> goods)
+        public void ReceiveGoods(IEnumerable<Goods> goods)
         {
             Warehouse.AddGoods(goods);
+        }
+
+        public void UpdateCurrentPlantations()
+        {
+            for (int i = 0; i < OpenPlantationsCount; i++)
+            {
+                AvailablePlantations.Add(Plantations.Dequeue());
+            }
         }
 
         private void InitStartState()
@@ -72,14 +80,8 @@ namespace Core.Entities
             RoleCards = MainFactory.GenerateRoleCards(Constants.RolesByPlayers[PlayersCount]);
 
             Colonists.Move(AvailableColonists, PlayersCount);
-        }
 
-        private void UpdateCurrentPlantations()
-        {
-            for (int i = 0; i < OpenPlantationsCount; i++)
-            {
-                AvailablePlantations.Add(Plantations.Dequeue());
-            }
+            Buildings = MainFactory.GenerateBuildings(PlayersCount);
         }
 
         private IEnumerable<Plantation> GetPlantations()
@@ -121,6 +123,21 @@ namespace Core.Entities
         public void ReceiveDoubloons(int doubloons)
         {
             _status.Doubloons += doubloons;
+        }
+
+        public bool UpdateAvailableColonists(IEnumerable<IEnumerable<IBuilding>> allPlayerBuildings)
+        {
+            var expectedColonistsCount =
+                allPlayerBuildings.SelectMany(x => x.ToList()).Sum(x => x.MaxColonistsCount - x.CurrentColonistsCount);
+
+            if (expectedColonistsCount <= _status.Colonists.CurrentColonistsCount)
+            {
+                _status.Colonists.Move(_status.AvailableColonists, expectedColonistsCount);
+
+                return true;
+            }
+
+            return false;
         }
 
         public bool TryGetRoleCard(Roles currentRole, out RoleCard roleCard)

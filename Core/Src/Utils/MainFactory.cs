@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Core.Entities;
+using Core.Entities.Buildings;
+using Core.Entities.Interfaces;
 using Core.Entities.IslandObjects;
 
 namespace Core.Utils
@@ -50,6 +52,17 @@ namespace Core.Utils
         public static List<RoleCard> GenerateRoleCards(params Roles[] roles)
         {
             return roles.Select(x => new RoleCard(x)).ToList();
+        }
+
+        public static Dictionary<IBuilding, int> GenerateBuildings(int playersCount)
+        {
+            var result = new Dictionary<IBuilding, int>
+            {
+                {new SmallWarehosue(), 2},
+                {new LargeWarehouse(), 2},
+            };
+
+            return result;
         }
     }
 }

@@ -44,6 +44,10 @@ namespace Core.Entities
             {
                 Doubloons++;
             }
+            else
+            {
+                IsUsed = false;
+            }
         }
     }
 

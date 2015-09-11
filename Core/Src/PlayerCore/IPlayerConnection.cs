@@ -14,26 +14,21 @@ namespace Core.PlayerCore
 
         IBuilding SelectBuildingToBuild(bool isHasPrivilage, PlayerStatus status, Dictionary<IBuilding, int> availableBuildings, IEnumerable<PlayerStatus> opponents);
 
-        MoveDirection MoveColonist(bool isHasPrivilage, PlayerStatus status,
-            IEnumerable<IBuilding> availableBuildings, IEnumerable<PlayerStatus> opponents);
+        MoveDirection MoveColonist(bool isHasPrivilage, PlayerStatus status, MainBoardStatus board, IEnumerable<PlayerStatus> opponents);
 
-        Goods? SelectGoodsToTrade(bool isHasPrivilage, PlayerStatus status,
-            IEnumerable<IBuilding> availableBuildings, IEnumerable<PlayerStatus> opponents);
+        Goods? SelectGoodsToTrade(bool isHasPrivilage, PlayerStatus status, MainBoardStatus board, IEnumerable<PlayerStatus> opponents);
 
-        Goods SelectAdditionalGoods(PlayerStatus status,
-            IEnumerable<IBuilding> availableBuildings, IEnumerable<PlayerStatus> opponents);
+        Goods SelectAdditionalGoods(PlayerStatus status, MainBoardStatus board, IEnumerable<PlayerStatus> opponents);
 
-        IEnumerable<IISlandObject> SelectISlandObjects(bool isHasPrivilage, PlayerStatus status,
-            IEnumerable<IBuilding> availableBuildings, IEnumerable<PlayerStatus> opponents);
+        IEnumerable<IISlandObject> SelectISlandObjects(bool isHasPrivilage, PlayerStatus status, MainBoardStatus board, IEnumerable<PlayerStatus> opponents);
 
-        GoodsToShip SelectGoodsToShip(PlayerStatus status,
-            IEnumerable<IBuilding> availableBuildings, IEnumerable<PlayerStatus> opponents);
+        GoodsToShip SelectGoodsToShip(PlayerStatus status, MainBoardStatus board, IEnumerable<PlayerStatus> opponents);
 
-        IEnumerable<Goods> SelectGoodsToWarehouse(PlayerStatus status,
-            IEnumerable<IBuilding> availableBuildings, IEnumerable<PlayerStatus> opponents);
+        IEnumerable<Goods> SelectGoodsForWarehouse(PlayerStatus status, MainBoardStatus board, IEnumerable<PlayerStatus> opponents);
 
-        Goods? SelectOneGoodsToStore(PlayerStatus status,
-            IEnumerable<IBuilding> availableBuildings, IEnumerable<PlayerStatus> opponents);
+        Goods? SelectOneGoodsForStore(PlayerStatus status, IEnumerable<PlayerStatus> opponents);
+
+        bool IsUsePrivilage(PlayerStatus status, MainBoardStatus mainBoardStatus, IEnumerable<PlayerStatus> opponents);
 
         void GameEnd(Dictionary<int, int> playersScore);
     }

@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using Core.Entities;
+using Core.Entities.Base;
 using Core.Entities.Interfaces;
+using Core.Entities.RoleParameters;
 using Core.PlayerCore;
 using Core.Utils;
 
@@ -67,7 +69,8 @@ namespace Core.Core
             var currentConnection = current.Connection;
             var currentOpponents = _players.Opponents(_governor);
 
-            var availableRoleCars = _mainBoardController.Status.RoleCards.Where(x => !x.IsUsed).Select(x=>x as RoleCardStatus).ToList();
+            var availableRoleCars =
+                _mainBoardController.Status.RoleCards.Where(x => !x.IsUsed).Select(x => x as RoleCardStatus).ToList();
 
             var cardStatus = currentConnection.SelectRole(availableRoleCars, currentPlayerStatus,
                 _mainBoardController.Status,
@@ -84,6 +87,11 @@ namespace Core.Core
             {
                 var playerIds = GeneratePlayersOrder(_governor);
 
+                if (roleCard.Role == Roles.Mayor)
+                {
+                    var isSuccessfull = DoMayorInitAction(currentPlayerStatus, _mainBoardController, playerIds);
+                }
+
                 foreach (var id in playerIds)
                 {
                     var status = _players[id].Status;
@@ -91,33 +99,22 @@ namespace Core.Core
                     var controller = _players[id].Controller;
                     var isHasPrivilage = status.Id == _governor;
                     var availableBuildings = _mainBoardController.Status.Buildings;
+                    var opponents = _players.Opponents(id).ToList();
 
                     switch (roleCard.Role)
                     {
-                            case Roles.Builder:
-                        {
-                            var building = connection.SelectBuildingToBuild(isHasPrivilage, status, availableBuildings,
-                                _players.Opponents(id));
-
-                            bool isSuccessfull = controller.DoSelectBuildingToBuild(building);
-
-                        }
+                        case Roles.Builder:
+                            DoBuilderAction(connection, isHasPrivilage, status, availableBuildings, opponents,
+                                controller);
+                            break;
+                        case Roles.Mayor:
+                            DoMayorAction(isHasPrivilage, connection, status, opponents, controller);
                             break;
                     }
-
-                    //var turnAction = connection.DoTurn(cardStatus.Role, status.Id == _governor, status,
-                    //    _mainBoardController.Status,
-                    //    _players.Where(x => x.Key != id).Select(x => x.Value.Status).ToArray());
-
-                    //_players[id].Controller.DoTurnAction(turnAction, status.Id == _governor);
                 }
             }
             else if (cardStatus.IsRequiredCurrentPlayerAction())
             {
-                //var turnAction = currentConnection.DoTurn(cardStatus.Role, true, currentPlayerStatus, _mainBoardController.Status,
-                //    _players.Where(x => x.Key != currentPlayerStatus.Id).Select(x => x.Value.Status).ToArray());
-
-                //_players[currentPlayerStatus.Id].Controller.DoTurnAction(turnAction, currentPlayerStatus.Id == _governor);
             }
             else
             {
@@ -126,6 +123,67 @@ namespace Core.Core
 
 
             _governor = GetNextGovernor();
+
+            CheckForNextRound(_mainBoardController.Status);
+        }
+
+        private bool DoMayorInitAction(PlayerStatus currentPlayerStatus, MainBoardController mainBoardController,
+            List<int> playerIds)
+        {
+            playerIds.Insert(0, currentPlayerStatus.Id);
+            var playersCount = playerIds.Count;
+            foreach (var playerId in playerIds)
+            {
+                var currentTotalColonistsCount = _mainBoardController.Status.AvailableColonists.CurrentColonistsCount;
+                var status = _players[playerId].Status;
+                var colonistsCount = currentTotalColonistsCount%playersCount + currentTotalColonistsCount/playersCount;
+
+                _mainBoardController.Status.Colonists.Move(status.Board.ColonistsWarehouse, colonistsCount);
+
+                playersCount--;
+            }
+
+            return true;
+        }
+
+        private void CheckForNextRound(MainBoardStatus status)
+        {
+            var allRoleCards = status.RoleCards;
+            if (allRoleCards.Count(x => x.IsUsed) == PlayersCount)
+            {
+                allRoleCards.ToList().ForEach(x => x.NextRound());
+            }
+        }
+
+        private void DoMayorAction(bool isHasPrivilage, IPlayerConnection connection, PlayerStatus status,
+            List<PlayerStatus> opponents,
+            PlayerController controller)
+        {
+            if (isHasPrivilage)
+            {
+                var usePrivilage = connection.IsUsePrivilage(status, _mainBoardController.Status,
+                    opponents);
+                controller.DoMayorActionTakeAdditionalColinists(usePrivilage);
+            }
+
+            Func<MoveDirection> moveDirectionAction =
+                () => connection.MoveColonist(isHasPrivilage, status, _mainBoardController.Status,
+                    opponents);
+            var moveDirection = moveDirectionAction();
+            while (moveDirection != null)
+            {
+                controller.DoMoveColonistAction(moveDirection);
+                moveDirection = moveDirectionAction();
+            }
+        }
+
+        private void DoBuilderAction(IPlayerConnection connection, bool isHasPrivilage, PlayerStatus status,
+            Dictionary<IBuilding, int> availableBuildings, List<PlayerStatus> opponents, PlayerController controller)
+        {
+            var building = connection.SelectBuildingToBuild(isHasPrivilage, status, availableBuildings,
+                opponents);
+
+            bool isSuccessfull = controller.DoSelectBuildingToBuild(building, isHasPrivilage);
         }
 
         private List<int> GeneratePlayersOrder(int governor)
@@ -173,15 +231,6 @@ namespace Core.Core
             return data.Item1;
         }
 
-        public bool DoTurnAction(Roles role, PlayerTurnAction turnAction, bool isPrivilage)
-        {
-            switch (role)
-            {
-
-            }
-            return true;
-        }
-
         public bool DoNoPlayerAction(Roles role)
         {
             switch (role)
@@ -199,10 +248,43 @@ namespace Core.Core
             _playerStatus.ReceiveDoubloons(_mainBoardController.TakeDoubloons(GameConstants.ProspectorMoney));
         }
 
-        public bool DoSelectBuildingToBuild(IBuilding building)
+        public bool DoSelectBuildingToBuild(IBuilding building, bool isHasPrivilage)
         {
+            var buildingToBuild =
+                _mainBoardController.Status.Buildings.Single(x => x.Key.GetType() == building.GetType());
+            var totalDiscount = _playerStatus.Board.Quarries.Count(x => x.CurrentColonistsCount > 0);
+            var realCost = buildingToBuild.Key.Cost - totalDiscount;
+
+            if (buildingToBuild.Value > 0 && realCost <= _playerStatus.Doubloons)
+            {
+                // TODO: check place amount
+                _playerStatus.Board.BuildBuilding(buildingToBuild.Key);
+                _mainBoardController.Status.Buildings[buildingToBuild.Key]--;
+
+                _mainBoardController.ReceiveDoubloons(_playerStatus.PayDoubloons(realCost));
+
+                var param = new BuilderParameters();
+                _playerStatus.Board.Buildings.OfType<BuildingBase<BuilderParameters>>().Where(x => x.ActivePoints > 0).ToList().ForEach(x=>x.DoAction(ref param));
+
+                if (param.TakeAdditionalColonist)
+                {
+                    _mainBoardController.Status.Colonists.Move(buildingToBuild.Key);
+                }
+
+                return true;
+            }
 
             return false;
+        }
+
+        public bool DoMayorActionTakeAdditionalColinists(bool usePrivilage)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool DoMoveColonistAction(MoveDirection moveDirection)
+        {
+            throw new NotImplementedException();
         }
     }
 

@@ -42,45 +42,48 @@ namespace Core.PlayerCore
             }
         }
 
-        public IBuilding SelectBuildingToBuild(bool isHasPrivilage, PlayerStatus status, Dictionary<IBuilding, int> availableBuildings, IEnumerable<PlayerStatus> opponents)
-        {
-            throw new NotImplementedException();
-        }
-
-        public MoveDirection MoveColonist(bool isHasPrivilage, PlayerStatus status, IEnumerable<IBuilding> availableBuildings,
+        public IBuilding SelectBuildingToBuild(bool isHasPrivilage, PlayerStatus status, Dictionary<IBuilding, int> availableBuildings,
             IEnumerable<PlayerStatus> opponents)
         {
             throw new NotImplementedException();
         }
 
-        public Goods? SelectGoodsToTrade(bool isHasPrivilage, PlayerStatus status, IEnumerable<IBuilding> availableBuildings,
-            IEnumerable<PlayerStatus> opponents)
+        public MoveDirection MoveColonist(bool isHasPrivilage, PlayerStatus status, MainBoardStatus board, IEnumerable<PlayerStatus> opponents)
         {
             throw new NotImplementedException();
         }
 
-        public Goods SelectAdditionalGoods(PlayerStatus status, IEnumerable<IBuilding> availableBuildings, IEnumerable<PlayerStatus> opponents)
+        public Goods? SelectGoodsToTrade(bool isHasPrivilage, PlayerStatus status, MainBoardStatus board, IEnumerable<PlayerStatus> opponents)
         {
             throw new NotImplementedException();
         }
 
-        public IEnumerable<IISlandObject> SelectISlandObjects(bool isHasPrivilage, PlayerStatus status, IEnumerable<IBuilding> availableBuildings,
-            IEnumerable<PlayerStatus> opponents)
+        public Goods SelectAdditionalGoods(PlayerStatus status, MainBoardStatus board, IEnumerable<PlayerStatus> opponents)
         {
             throw new NotImplementedException();
         }
 
-        public GoodsToShip SelectGoodsToShip(PlayerStatus status, IEnumerable<IBuilding> availableBuildings, IEnumerable<PlayerStatus> opponents)
+        public IEnumerable<IISlandObject> SelectISlandObjects(bool isHasPrivilage, PlayerStatus status, MainBoardStatus board, IEnumerable<PlayerStatus> opponents)
         {
             throw new NotImplementedException();
         }
 
-        public IEnumerable<Goods> SelectGoodsToWarehouse(PlayerStatus status, IEnumerable<IBuilding> availableBuildings, IEnumerable<PlayerStatus> opponents)
+        public GoodsToShip SelectGoodsToShip(PlayerStatus status, MainBoardStatus board, IEnumerable<PlayerStatus> opponents)
         {
             throw new NotImplementedException();
         }
 
-        public Goods? SelectOneGoodsToStore(PlayerStatus status, IEnumerable<IBuilding> availableBuildings, IEnumerable<PlayerStatus> opponents)
+        public IEnumerable<Goods> SelectGoodsForWarehouse(PlayerStatus status, MainBoardStatus board, IEnumerable<PlayerStatus> opponents)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Goods? SelectOneGoodsForStore(PlayerStatus status, IEnumerable<PlayerStatus> opponents)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool IsUsePrivilage(PlayerStatus status, MainBoardStatus mainBoardStatus, IEnumerable<PlayerStatus> opponents)
         {
             throw new NotImplementedException();
         }
