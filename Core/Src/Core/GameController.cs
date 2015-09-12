@@ -114,6 +114,9 @@ namespace Core.Core
                         case Roles.Settler:
                             DoSettlerAction(connection, isHasPrivilage, status, opponents, controller);
                             break;
+                            case Roles.Trader:
+                            DoTradeAction(connection, isHasPrivilage, status, opponents, controller);
+                            break;
                     }
                 }
             }
@@ -131,14 +134,23 @@ namespace Core.Core
             CheckForNextRound(_mainBoardController.Status);
         }
 
-        private bool DoSettlerAction(IPlayerConnection connection, bool isHasPrivilage, PlayerStatus status,
+        private void DoTradeAction(IPlayerConnection connection, bool isHasPrivilage, PlayerStatus status, List<PlayerStatus> opponents, PlayerController controller)
+        {
+            var goodsForTrade = connection.SelectGoodsToTrade(isHasPrivilage, status, _mainBoardController.Status,
+                opponents);
+
+            if (goodsForTrade.HasValue)
+            {
+                controller.DoTradeAction(goodsForTrade.Value, isHasPrivilage);
+            }
+        }
+
+        private void DoSettlerAction(IPlayerConnection connection, bool isHasPrivilage, PlayerStatus status,
             List<PlayerStatus> opponents, PlayerController controller)
         {
             var islandObjects = connection.SelectISlandObjects(isHasPrivilage, status, _mainBoardController.Status,
                 opponents);
             controller.DoSettlerAction(islandObjects.ToList(), isHasPrivilage);
-
-            return true;
         }
 
         private bool DoMayorInitAction(PlayerStatus currentPlayerStatus, MainBoardController mainBoardController,
@@ -355,6 +367,29 @@ namespace Core.Core
 
             return true;
 
+        }
+
+        public bool DoTradeAction(Goods value, bool isHasPrivilage)
+        {
+            var param = new TraderParameters();
+
+            var traderBuildings = _playerStatus.Board.Buildings.OfType<BuildingBase<TraderParameters>>().Where(x=>x.ActivePoints > 0).ToList();
+            traderBuildings.ForEach(x=>x.DoAction(ref param));
+
+            if (_mainBoardController.Status.Market.CanSellGood(value, param.PermissionToSellTheSame))
+            {
+                var money = _mainBoardController.Status.Market.SellGood(value, traderBuildings);
+                if (money.HasValue)
+                {
+                    _playerStatus.Warehouse.RemoveGoods(new [] {value});
+                    _mainBoardController.Status.Doubloons -= money.Value;
+                    _playerStatus.ReceiveDoubloons(money.Value);
+
+                    return true;
+                }
+            }
+
+            return false;
         }
     }
 
