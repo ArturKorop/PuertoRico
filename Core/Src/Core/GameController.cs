@@ -4,6 +4,7 @@ using System.Linq;
 using Core.Entities;
 using Core.Entities.Base;
 using Core.Entities.Interfaces;
+using Core.Entities.IslandObjects;
 using Core.Entities.RoleParameters;
 using Core.PlayerCore;
 using Core.Utils;
@@ -110,6 +111,9 @@ namespace Core.Core
                         case Roles.Mayor:
                             DoMayorAction(isHasPrivilage, connection, status, opponents, controller);
                             break;
+                        case Roles.Settler:
+                            DoSettlerAction(connection, isHasPrivilage, status, opponents, controller);
+                            break;
                     }
                 }
             }
@@ -125,6 +129,16 @@ namespace Core.Core
             _governor = GetNextGovernor();
 
             CheckForNextRound(_mainBoardController.Status);
+        }
+
+        private bool DoSettlerAction(IPlayerConnection connection, bool isHasPrivilage, PlayerStatus status,
+            List<PlayerStatus> opponents, PlayerController controller)
+        {
+            var islandObjects = connection.SelectISlandObjects(isHasPrivilage, status, _mainBoardController.Status,
+                opponents);
+            controller.DoSettlerAction(islandObjects.ToList(), isHasPrivilage);
+
+            return true;
         }
 
         private bool DoMayorInitAction(PlayerStatus currentPlayerStatus, MainBoardController mainBoardController,
@@ -264,7 +278,10 @@ namespace Core.Core
                 _mainBoardController.ReceiveDoubloons(_playerStatus.PayDoubloons(realCost));
 
                 var param = new BuilderParameters();
-                _playerStatus.Board.Buildings.OfType<BuildingBase<BuilderParameters>>().Where(x => x.ActivePoints > 0).ToList().ForEach(x=>x.DoAction(ref param));
+                _playerStatus.Board.Buildings.OfType<BuildingBase<BuilderParameters>>()
+                    .Where(x => x.ActivePoints > 0)
+                    .ToList()
+                    .ForEach(x => x.DoAction(ref param));
 
                 if (param.TakeAdditionalColonist)
                 {
@@ -279,12 +296,65 @@ namespace Core.Core
 
         public bool DoMayorActionTakeAdditionalColinists(bool usePrivilage)
         {
-            throw new NotImplementedException();
+            if (usePrivilage)
+            {
+                _mainBoardController.Status.Colonists.Move(_playerStatus.Board.ColonistsWarehouse);
+
+                return true;
+            }
+
+            return true;
         }
 
         public bool DoMoveColonistAction(MoveDirection moveDirection)
         {
-            throw new NotImplementedException();
+            moveDirection.Source.Move(moveDirection.Destination);
+
+            return true;
+        }
+
+        public bool DoSettlerAction(List<IISlandObject> islandObjects, bool isHasPrivilage)
+        {
+            var param = new SettlerParameters();
+            _playerStatus.Board.Buildings.OfType<BuildingBase<SettlerParameters>>()
+                .Where(x => x.ActivePoints > 0)
+                .ToList()
+                .ForEach(x => x.DoAction(ref param));
+
+            var tooManyObjects = islandObjects.Count() > 1 && !param.CanTakeAdditionalPlantation;
+            var notAllowedQuarry = islandObjects.OfType<Quarry>().Any() &&
+                                   !(param.CanTakeQuarryInsteadPlantation || isHasPrivilage);
+
+            if (tooManyObjects || notAllowedQuarry)
+            {
+                return false;
+            }
+
+            var quarries = islandObjects.OfType<Quarry>();
+            var plantations = islandObjects.OfType<Plantation>();
+
+            foreach (var quarry in quarries)
+            {
+                var newQuarry = _mainBoardController.Status.Quarries.Dequeue();
+                _playerStatus.Board.BuildQuarry(quarry);
+            }
+
+            foreach (var plantation in plantations)
+            {
+                _mainBoardController.Status.AvailablePlantations.Remove(plantation);
+                _playerStatus.Board.BuildPlantation(plantation);
+            }
+
+            if (param.CanTakeAdditionalColonist)
+            {
+                foreach (var islandObject in islandObjects)
+                {
+                    _mainBoardController.Status.Colonists.Move(islandObject);
+                }
+            }
+
+            return true;
+
         }
     }
 

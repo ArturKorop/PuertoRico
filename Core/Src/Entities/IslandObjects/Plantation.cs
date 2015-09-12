@@ -1,4 +1,5 @@
 ﻿using Core.Entities.Base;
+using Core.Entities.Interfaces;
 
 namespace Core.Entities.IslandObjects
 {
@@ -12,7 +13,7 @@ namespace Core.Entities.IslandObjects
         }
     }
 
-    public interface IISlandObject
+    public interface IISlandObject : IColonistsHolder
     {
         
     }
