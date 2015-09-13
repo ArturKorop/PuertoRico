@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Core.Entities.Base;
 using Core.Entities.RoleParameters;
@@ -24,22 +23,26 @@ namespace Core.Entities
 
         private readonly Dictionary<Goods, int> _priceList;
 
-        private readonly List<Goods> _goodsToTrade;
+        private List<Goods> _goodsToTrade;
+
+        public IEnumerable<Goods> GoodsToTrade => _goodsToTrade;
 
         public Market()
         {
             _goodsToTrade = new List<Goods>();
-            _priceList = new Dictionary<Goods, int>();
-            _priceList.Add(Goods.Corn, CornPrice);
-            _priceList.Add(Goods.Indigo, IndigoPrice);
-            _priceList.Add(Goods.Sugar, SugarPrice);
-            _priceList.Add(Goods.Tabacco, TabaccoPrice);
-            _priceList.Add(Goods.Coffee, CoffeePrice);
+            _priceList = new Dictionary<Goods, int>
+            {
+                {Goods.Corn, CornPrice},
+                {Goods.Indigo, IndigoPrice},
+                {Goods.Sugar, SugarPrice},
+                {Goods.Tabacco, TabaccoPrice},
+                {Goods.Coffee, CoffeePrice}
+            };
         }
 
         public bool CanSellGood(Goods good, bool permissionToSellTheSame)
         {
-            if(FreeSpaces > 0)
+            if (FreeSpaces > 0)
             {
                 if (!permissionToSellTheSame && _goodsToTrade.Any(x => x == good))
                 {
@@ -72,7 +75,7 @@ namespace Core.Entities
         public int? SellGood(Goods good, IEnumerable<BuildingBase<TraderParameters>> buildings)
         {
             var price = SimulateSellGoods(good, buildings);
-            if(price.HasValue)
+            if (price.HasValue)
             {
                 _goodsToTrade.Add(good);
             }
@@ -82,7 +85,7 @@ namespace Core.Entities
 
         public IEnumerable<Goods> EndPhase()
         {
-            if(FreeSpaces == 0)
+            if (FreeSpaces == 0)
             {
                 var result = _goodsToTrade;
                 _goodsToTrade.Clear();
@@ -97,6 +100,5 @@ namespace Core.Entities
         {
             return _priceList[good];
         }
-
     }
 }

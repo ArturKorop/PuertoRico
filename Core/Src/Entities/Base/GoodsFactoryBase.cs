@@ -14,7 +14,7 @@ namespace Core.Entities.Base
 
         protected override void DoActionImpl(ref CraftsmanParameters parameters)
         {
-            parameters.GoodsProduction[Type] += ActivePoints;
+            parameters.GoodsProduction[Type] += CurrentColonistsCount;
         }
     }
 }

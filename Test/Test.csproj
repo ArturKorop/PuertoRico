@@ -59,6 +59,7 @@
     <Compile Include="Src\Entities\Buildings\SmallMarketTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Src\Entities\MarketTests.cs" />
+    <Compile Include="Src\MainBoardStatusTests.cs" />
     <Compile Include="Src\PlayerControllerTests.cs" />
     <Compile Include="Src\Utils\UtilTests.cs" />
   </ItemGroup>

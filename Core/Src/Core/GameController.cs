@@ -58,16 +58,18 @@ namespace Core.Core
 
         private void PlayRound()
         {
-            var current = _players[_governor];
-            var currentPlayerStatus = current.Status;
-            var currentPlayerController = current.Controller;
-            var currentConnection = current.Connection;
+            var playerContainer = _players[_governor];
+            var currentPlayerStatus = playerContainer.Status;
+            var currentPlayerController = playerContainer.Controller;
+            var currentConnection = playerContainer.Connection;
             var currentOpponents = _players.Opponents(_governor).ToList();
 
             var availableRoleCars =
                 _mainBoardController.Status.RoleCards.Where(x => !x.IsUsed).Select(x => x as RoleCardStatus).ToList();
 
-            var cardStatus = currentConnection.SelectRole(availableRoleCars, currentPlayerStatus,
+            var cardStatus = currentConnection.SelectRole(
+                availableRoleCars,
+                currentPlayerStatus,
                 _mainBoardController.Status,
                 currentOpponents);
 
@@ -167,7 +169,7 @@ namespace Core.Core
                 status.Board.Buildings.OfType<GoodsFactoryBase>().ToList().ForEach(x => x.DoAction(ref param));
 
                 var plantations =
-                    status.Board.Plantations.Where(x => x.ActivePoints > 0).Select(x => x.Type).GroupBy(x => x);
+                    status.Board.Plantations.Where(x => x.IsActive).Select(x => x.Type).GroupBy(x => x);
 
                 var production = plantations.ToDictionary(plantation => plantation.Key,
                     plantation => Math.Min(plantation.Count(), param.GoodsProduction[plantation.Key]));
@@ -184,7 +186,7 @@ namespace Core.Core
         private void DoCaptainFinishAction(MainBoardController mainBoardController)
         {
             var freeGoods = mainBoardController.Status.Ships.Select(x => x.FinishRound()).Where(x => x != null);
-            mainBoardController.Status.ReceiveGoods(freeGoods);
+            mainBoardController.ReceiveGoods(freeGoods);
         }
 
         private void DoCaptainAction(PlayerStatus status, IPlayerConnection connection, PlayerController controller,
@@ -214,7 +216,7 @@ namespace Core.Core
 
             if (endPhaseResult != null)
             {
-                mainBoardController.Status.ReceiveGoods(endPhaseResult);
+                mainBoardController.ReceiveGoods(endPhaseResult);
             }
         }
 

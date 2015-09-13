@@ -61,7 +61,7 @@ namespace Core.Core
 
                 var param = new BuilderParameters();
                 _playerStatus.Board.Buildings.OfType<BuildingBase<BuilderParameters>>()
-                    .Where(x => x.ActivePoints > 0)
+                    .Where(x => x.IsActive)
                     .ToList()
                     .ForEach(x => x.DoAction(ref param));
 
@@ -99,7 +99,7 @@ namespace Core.Core
         {
             var param = new SettlerParameters();
             _playerStatus.Board.Buildings.OfType<BuildingBase<SettlerParameters>>()
-                .Where(x => x.ActivePoints > 0)
+                .Where(x => x.IsActive)
                 .ToList()
                 .ForEach(x => x.DoAction(ref param));
 
@@ -144,7 +144,7 @@ namespace Core.Core
 
             var traderBuildings =
                 _playerStatus.Board.Buildings.OfType<BuildingBase<TraderParameters>>()
-                    .Where(x => x.ActivePoints > 0)
+                    .Where(x => x.IsActive)
                     .ToList();
             traderBuildings.ForEach(x => x.DoAction(ref param));
 

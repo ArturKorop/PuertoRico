@@ -10,6 +10,6 @@ namespace Core.Entities.Interfaces
 
         void ReceiveColonist(int count = 1);
 
-        int ActivePoints { get; }
+        bool IsActive { get; }
     }
 }

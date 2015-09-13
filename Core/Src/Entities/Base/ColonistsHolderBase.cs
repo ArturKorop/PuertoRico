@@ -7,7 +7,7 @@ namespace Core.Entities.Base
     {
         public int MaxColonistsCount { get; }
 
-        public int ActivePoints => CurrentColonistsCount;
+        public bool IsActive => CurrentColonistsCount > 0;
 
         public int CurrentColonistsCount { get; private set; }
 
@@ -37,6 +37,5 @@ namespace Core.Entities.Base
                 throw new InvalidOperationException("Too much colonists");
             }
         }
-
     }
 }

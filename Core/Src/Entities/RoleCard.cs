@@ -2,8 +2,15 @@ using System;
 
 namespace Core.Entities
 {
+    public interface ICloneable<out T>
+    {
+        T Clone();
+    }
+
     public class RoleCardStatus
     {
+        public bool IsUsed { get; protected set; }
+
         public Roles Role { get; }
 
         public int Doubloons { get; protected set; }
@@ -12,13 +19,12 @@ namespace Core.Entities
         {
             Role = role;
             Doubloons = 0;
+            IsUsed = false;
         }
     }
 
     public class RoleCard : RoleCardStatus
     {
-        public bool IsUsed { get; private set; }
-
         public RoleCard(Roles role) : base(role)
         {
             IsUsed = false;

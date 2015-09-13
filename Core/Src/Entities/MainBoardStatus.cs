@@ -1,13 +1,19 @@
 ﻿using System;
+using System.CodeDom;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Text;
+using System.Xml;
+using System.Xml.Serialization;
+using Core.Core;
 using Core.Entities.Interfaces;
 using Core.Entities.IslandObjects;
 using Core.Utils;
 
 namespace Core.Entities
 {
-    public class MainBoardStatus
+    public class MainBoardStatus : ICloneable<MainBoardStatus>
     {
         public int OpenPlantationsCount { get; }
 
@@ -21,7 +27,7 @@ namespace Core.Entities
 
         public int Doubloons { get; set; }
 
-        public ColonistsWarehouse Colonists { get; private set; }
+        public ColonistsWarehouse Colonists { get; private set; } = new ColonistsWarehouse();
 
         public Dictionary<IBuilding, int> Buildings { get; set; }
 
@@ -35,37 +41,22 @@ namespace Core.Entities
 
         public List<RoleCard> RoleCards { get; private set; }
 
-        public ColonistsWarehouse AvailableColonists { get; } = new ColonistsWarehouse();
+        public ColonistsWarehouse AvailableColonists { get; private set; } = new ColonistsWarehouse();
 
         public MainBoardStatus(int playersCount)
         {
             PlayersCount = playersCount;
             OpenPlantationsCount = PlayersCount + 1;
-            InitStartState();
+            Init();
         }
 
-        public void ReceiveGoods(IEnumerable<Goods> goods)
-        {
-            Warehouse.AddGoods(goods);
-        }
+        /// <summary>
+        /// For serialization.
+        /// </summary>
+        public MainBoardStatus()
+        { }
 
-        public void ReceiveGoods(IEnumerable<Tuple<Goods, int>>  goods)
-        {
-            foreach (var tuple in goods)
-            {
-                Warehouse.AddGoods(tuple.Item1, tuple.Item2);
-            }
-        }
-
-        public void UpdateCurrentPlantations()
-        {
-            for (int i = 0; i < OpenPlantationsCount; i++)
-            {
-                AvailablePlantations.Add(Plantations.Dequeue());
-            }
-        }
-
-        private void InitStartState()
+        private void Init()
         {
             Market = new Market();
             AvailablePlantations = new List<Plantation>();
@@ -82,7 +73,6 @@ namespace Core.Entities
 
             Ships = MainFactory.GenerateShips(Constants.ShipsByPlayers[PlayersCount]);
 
-            Colonists = new ColonistsWarehouse(); 
             Colonists.ReceiveColonist(Constants.ColonistsByPlayers[PlayersCount]);
 
             RoleCards = MainFactory.GenerateRoleCards(Constants.RolesByPlayers[PlayersCount]);
@@ -101,6 +91,24 @@ namespace Core.Entities
             var result = Util.Shuffle(plantations);
 
             return result;
+        }
+
+
+        public MainBoardStatus Clone()
+        {
+            var serializer = new XmlSerializerFactory().CreateSerializer(typeof (MainBoardStatus));
+            using (var stream = new MemoryStream())
+            {
+                if (serializer != null)
+                {
+                    serializer.Serialize(stream, this);
+                    var clone = (MainBoardStatus)serializer.Deserialize(new StreamReader(stream));
+
+                    return clone;
+                }
+
+                throw new InvalidOperationException("Clone errors");
+            }
         }
     }
 
@@ -131,6 +139,27 @@ namespace Core.Entities
         public void ReceiveDoubloons(int doubloons)
         {
             _status.Doubloons += doubloons;
+        }
+
+        public void ReceiveGoods(IEnumerable<Goods> goods)
+        {
+            _status.Warehouse.AddGoods(goods);
+        }
+
+        public void ReceiveGoods(IEnumerable<Tuple<Goods, int>> goods)
+        {
+            foreach (var tuple in goods)
+            {
+                _status.Warehouse.AddGoods(tuple.Item1, tuple.Item2);
+            }
+        }
+
+        public void UpdateCurrentPlantations()
+        {
+            for (int i = 0; i < _status.OpenPlantationsCount; i++)
+            {
+                _status.AvailablePlantations.Add(_status.Plantations.Dequeue());
+            }
         }
 
         public bool UpdateAvailableColonists(IEnumerable<IEnumerable<IBuilding>> allPlayerBuildings)

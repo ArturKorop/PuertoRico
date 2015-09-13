@@ -5,7 +5,7 @@ namespace Core.Entities.IslandObjects
 {
     public class Plantation : ColonistsHolderBase, IISlandObject
     {
-        public Goods Type { get; private set; }
+        public Goods Type { get; }
 
         public Plantation(Goods type) : base(1)
         {

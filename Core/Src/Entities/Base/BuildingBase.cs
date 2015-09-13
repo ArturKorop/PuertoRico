@@ -23,7 +23,7 @@ namespace Core.Entities.Base
 
         public virtual void DoAction(ref T parameters)
         {
-            if (ActivePoints == 0)
+            if (!IsActive)
             {
                 throw new InvalidOperationException("Too less colonists");
             }
