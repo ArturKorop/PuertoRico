@@ -1,4 +1,6 @@
-﻿namespace Core.Entities
+﻿using System;
+
+namespace Core.Entities
 {
     public class Ship
     {
@@ -37,7 +39,20 @@
             return true;
         }
 
-        public void Clear()
+        public Tuple<Goods, int> FinishRound()
+        {
+            if (FreeSpace == 0 && _goodsType.HasValue)
+            {
+                var result = new Tuple<Goods, int>(_goodsType.Value, _usedSpace);
+                Clear();
+
+                return result;
+            }
+
+            return null;
+        }
+
+        private void Clear()
         {
             _usedSpace = 0;
             _goodsType = null;

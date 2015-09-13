@@ -35,6 +35,11 @@ namespace Core.Entities
             }
         }
 
+        public void AddGoods(Goods type, int count)
+        {
+            _goods[type] += count;
+        }
+
         public void RemoveGoods(Goods type, int count)
         {
             _goods[type] -= count;

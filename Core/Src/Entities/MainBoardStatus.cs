@@ -49,6 +49,14 @@ namespace Core.Entities
             Warehouse.AddGoods(goods);
         }
 
+        public void ReceiveGoods(IEnumerable<Tuple<Goods, int>>  goods)
+        {
+            foreach (var tuple in goods)
+            {
+                Warehouse.AddGoods(tuple.Item1, tuple.Item2);
+            }
+        }
+
         public void UpdateCurrentPlantations()
         {
             for (int i = 0; i < OpenPlantationsCount; i++)

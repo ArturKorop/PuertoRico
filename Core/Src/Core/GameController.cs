@@ -145,6 +145,8 @@ namespace Core.Core
                     DoCaptainAction(status, connection, controller, isHasPrivilage, opponents);
                     currentPlayer = GetNextPlayer(currentPlayer);
                 }
+
+                DoCaptainFinishAction(_mainBoardController);
             }
             else
             {
@@ -155,6 +157,12 @@ namespace Core.Core
             _governor = GetNextGovernor();
 
             CheckForNextRound(_mainBoardController.Status);
+        }
+
+        private void DoCaptainFinishAction(MainBoardController mainBoardController)
+        {
+            var freeGoods = mainBoardController.Status.Ships.Select(x => x.FinishRound()).Where(x => x != null);
+            mainBoardController.Status.ReceiveGoods(freeGoods);
         }
 
         private void DoCaptainAction(PlayerStatus status, IPlayerConnection connection, PlayerController controller, bool isHasPrivilage, List<PlayerStatus> opponents)
