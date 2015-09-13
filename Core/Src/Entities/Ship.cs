@@ -8,15 +8,9 @@
 
         public int Space { get; }
 
-        public int FreeSpace
-        {
-            get { return Space - _usedSpace; }
-        }
+        public int FreeSpace => Space - _usedSpace;
 
-        public Goods? Type
-        {
-            get { return _goodsType; }
-        }
+        public Goods? Type => _goodsType;
 
         public Ship(int space)
         {

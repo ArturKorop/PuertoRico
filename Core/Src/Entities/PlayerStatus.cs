@@ -9,7 +9,7 @@ namespace Core.Entities
 
         public string Name { get; }
 
-        public int Vp { get; }
+        public int Vp { get; private set; }
 
         public int Doubloons { get; private set; }
 
@@ -25,6 +25,11 @@ namespace Core.Entities
             Doubloons = 0;
             Board = new PlayerBoard();
             Warehouse = new Warehouse();
+        }
+
+        public void AddVp(int count)
+        {
+            Vp += count;
         }
 
         public void ReceiveDoubloons(int doubloons)
@@ -50,7 +55,7 @@ namespace Core.Entities
             builder.AppendFormat("Id: {0}; Name: {1}\n", Id, Name);
             builder.AppendFormat("Vp: {0}; Doubloons: {1}\n", Vp, Doubloons);
             builder.AppendFormat("Colonists: {0};\n", Board.TotalColonists);
-            builder.AppendLine(Warehouse.Status());
+            builder.AppendLine(Warehouse.Display());
             builder.AppendLine(Board.Status());
 
             return builder.ToString();

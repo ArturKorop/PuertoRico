@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Runtime.InteropServices.ComTypes;
 using System.Text;
 
 namespace Core.Entities
@@ -33,15 +35,25 @@ namespace Core.Entities
             }
         }
 
-        public void RemoveGoods(IEnumerable<Goods> goods)
+        public void RemoveGoods(Goods type, int count)
         {
-            foreach (var good in goods)
-            {
-                _goods[good]--;
+            _goods[type] -= count;
 
-                if (_goods[good] < 0)
+            if (_goods[type] < 0)
+            {
+                throw new InvalidOperationException("Too many goods for remove");
+            }
+        }
+
+        public void RemoveGoods(IEnumerable<Goods> types)
+        {
+            foreach (var type in types)
+            {
+                _goods[type]--;
+
+                if (_goods[type] < 0)
                 {
-                    throw new InvalidOperationException("SendGoods");
+                    throw new InvalidOperationException("Too many goods for remove");
                 }
             }
         }
@@ -51,7 +63,7 @@ namespace Core.Entities
             return _goods[type];
         }
 
-        public string Status()
+        public string Display()
         {
             var builder = new StringBuilder();
             builder.AppendFormat("Warehouse:\n Corn: {0};\n Sugar: {1};\n Indigo: {2};\n Tabacco: {3};\n Coffee: {4};",
@@ -59,6 +71,14 @@ namespace Core.Entities
                 _goods[Goods.Coffee]);
 
             return builder.ToString();
+        }
+    }
+
+    public static class WarehouseExtensions
+    {
+        public static IEnumerable<Goods> GetAvailableGoods(this Warehouse warehouse)
+        {
+            return Enum.GetValues(typeof (Goods)).Cast<Goods>().Where(goods => warehouse.GetGoodsCount(goods) > 0);
         }
     }
 }

@@ -58,7 +58,6 @@ namespace Core.Entities
             switch (card.Role)
             {
                 case Roles.Builder:
-                case Roles.Captain:
                 case Roles.Mayor:
                 case Roles.Settler:
                 case Roles.Trader:
@@ -73,6 +72,17 @@ namespace Core.Entities
             switch (card.Role)
             {
                 case Roles.Craftsman:
+                    return true;
+                default:
+                    return false;
+            }
+        }
+
+        public static bool IsRequiredAllPlayersActionSeveralTimes(this RoleCardStatus card)
+        {
+            switch (card.Role)
+            {
+                case Roles.Captain:
                     return true;
                 default:
                     return false;

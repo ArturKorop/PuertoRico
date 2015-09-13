@@ -114,14 +114,37 @@ namespace Core.Core
                         case Roles.Settler:
                             DoSettlerAction(connection, isHasPrivilage, status, opponents, controller);
                             break;
-                            case Roles.Trader:
+                        case Roles.Trader:
                             DoTradeAction(connection, isHasPrivilage, status, opponents, controller);
                             break;
+                        default:
+                            throw new InvalidOperationException("Wrong Role");
                     }
+                }
+
+                if (roleCard.Role == Roles.Trader)
+                {
+                    DoTradeFinishAction(_mainBoardController);
                 }
             }
             else if (cardStatus.IsRequiredCurrentPlayerAction())
             {
+                    //DoCraftsmanAction
+            }
+            else if (cardStatus.IsRequiredAllPlayersActionSeveralTimes())
+            {
+                var currentPlayer = _governor;
+                while (!IsCaptaionActionFinished())
+                {
+                    var status = _players[currentPlayer].Status;
+                    var connection = _players[currentPlayer].Connection;
+                    var controller = _players[currentPlayer].Controller;
+                    var isHasPrivilage = status.Id == _governor;
+                    var opponents = _players.Opponents(currentPlayer).ToList();
+
+                    DoCaptainAction(status, connection, controller, isHasPrivilage, opponents);
+                    currentPlayer = GetNextPlayer(currentPlayer);
+                }
             }
             else
             {
@@ -134,7 +157,36 @@ namespace Core.Core
             CheckForNextRound(_mainBoardController.Status);
         }
 
-        private void DoTradeAction(IPlayerConnection connection, bool isHasPrivilage, PlayerStatus status, List<PlayerStatus> opponents, PlayerController controller)
+        private void DoCaptainAction(PlayerStatus status, IPlayerConnection connection, PlayerController controller, bool isHasPrivilage, List<PlayerStatus> opponents)
+        {
+            var goodsToShip = connection.SelectGoodsToShip(status, _mainBoardController.Status, opponents);
+            controller.DoCaptainAction(goodsToShip);
+        }
+
+        private bool IsCaptaionActionFinished()
+        {
+            var allShipsFull = _mainBoardController.Status.Ships.All(x => x.FreeSpace == 0);
+
+            var playersGoods = _players.Values.SelectMany(x => x.Status.Warehouse.GetAvailableGoods()).Distinct();
+            var playersNotHaveGoodsForShips =
+                _mainBoardController.Status.Ships.Where(x => x.FreeSpace != 0).Select(x => x.Type).Any(x => x.HasValue && playersGoods.Contains(x.Value));
+
+            return allShipsFull || playersNotHaveGoodsForShips;
+        }
+
+        private void DoTradeFinishAction(MainBoardController mainBoardController)
+        {
+            var market = mainBoardController.Status.Market;
+                var endPhaseResult = market.EndPhase();
+
+            if (endPhaseResult != null)
+            {
+                mainBoardController.Status.ReceiveGoods(endPhaseResult);
+            }
+        }
+
+        private void DoTradeAction(IPlayerConnection connection, bool isHasPrivilage, PlayerStatus status,
+            List<PlayerStatus> opponents, PlayerController controller)
         {
             var goodsForTrade = connection.SelectGoodsToTrade(isHasPrivilage, status, _mainBoardController.Status,
                 opponents);
@@ -229,6 +281,13 @@ namespace Core.Core
             var nextGovernor = _governor < _players.Count - 1 ? _governor + 1 : 0;
 
             return nextGovernor;
+        }
+
+        private int GetNextPlayer(int currentPlayer)
+        {
+            var nextPlayer = currentPlayer < _players.Count - 1 ? currentPlayer + 1 : 0;
+
+            return nextPlayer;
         }
     }
 
@@ -366,22 +425,24 @@ namespace Core.Core
             }
 
             return true;
-
         }
 
         public bool DoTradeAction(Goods value, bool isHasPrivilage)
         {
             var param = new TraderParameters();
 
-            var traderBuildings = _playerStatus.Board.Buildings.OfType<BuildingBase<TraderParameters>>().Where(x=>x.ActivePoints > 0).ToList();
-            traderBuildings.ForEach(x=>x.DoAction(ref param));
+            var traderBuildings =
+                _playerStatus.Board.Buildings.OfType<BuildingBase<TraderParameters>>()
+                    .Where(x => x.ActivePoints > 0)
+                    .ToList();
+            traderBuildings.ForEach(x => x.DoAction(ref param));
 
             if (_mainBoardController.Status.Market.CanSellGood(value, param.PermissionToSellTheSame))
             {
                 var money = _mainBoardController.Status.Market.SellGood(value, traderBuildings);
                 if (money.HasValue)
                 {
-                    _playerStatus.Warehouse.RemoveGoods(new [] {value});
+                    _playerStatus.Warehouse.RemoveGoods(new[] {value});
                     _mainBoardController.Status.Doubloons -= money.Value;
                     _playerStatus.ReceiveDoubloons(money.Value);
 
@@ -390,6 +451,18 @@ namespace Core.Core
             }
 
             return false;
+        }
+
+        public void DoCaptainAction(GoodsToShip goodsToShip)
+        {
+            var goods = goodsToShip.Goods;
+            var ship = _mainBoardController.Status.Ships.Single(x => x.Space == goodsToShip.Ship.Space);
+            var playerGoodsCount = _playerStatus.Warehouse.GetGoodsCount(goods);
+            var goodsCount = Math.Min(playerGoodsCount, ship.FreeSpace);
+            ship.AddGoods(goods, goodsCount);
+            _playerStatus.Warehouse.RemoveGoods(goods, goodsCount);
+            _playerStatus.AddVp(goodsCount);
+            _mainBoardController.Status.Vp -= goodsCount;
         }
     }
 

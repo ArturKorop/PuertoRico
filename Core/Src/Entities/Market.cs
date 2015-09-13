@@ -20,7 +20,7 @@ namespace Core.Entities
 
         public const int MaxGoodsCount = 4;
 
-        public int FreeSpaces { get { return MaxGoodsCount - _goodsToTrade.Count; }}
+        public int FreeSpaces => MaxGoodsCount - _goodsToTrade.Count;
 
         private readonly Dictionary<Goods, int> _priceList;
 
@@ -80,13 +80,17 @@ namespace Core.Entities
             return price;
         }
 
-        public void EndPhase(Action<IEnumerable<Goods>> endPhaseAction)
+        public IEnumerable<Goods> EndPhase()
         {
             if(FreeSpaces == 0)
             {
-                endPhaseAction(_goodsToTrade);
+                var result = _goodsToTrade;
                 _goodsToTrade.Clear();
+
+                return result;
             }
+
+            return null;
         }
 
         private int GetDefaultGoodPrice(Goods good)
