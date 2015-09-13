@@ -68,7 +68,7 @@ namespace Core.Core
             var currentPlayerStatus = current.Status;
             var currentPlayerController = current.Controller;
             var currentConnection = current.Connection;
-            var currentOpponents = _players.Opponents(_governor);
+            var currentOpponents = _players.Opponents(_governor).ToList();
 
             var availableRoleCars =
                 _mainBoardController.Status.RoleCards.Where(x => !x.IsUsed).Select(x => x as RoleCardStatus).ToList();
@@ -129,7 +129,8 @@ namespace Core.Core
             }
             else if (cardStatus.IsRequiredCurrentPlayerAction())
             {
-                    //DoCraftsmanAction
+                DoCraftsmanAction(currentConnection, currentPlayerController, _mainBoardController.Status,
+                    currentOpponents, currentPlayerStatus);
             }
             else if (cardStatus.IsRequiredAllPlayersActionSeveralTimes())
             {
@@ -159,13 +160,41 @@ namespace Core.Core
             CheckForNextRound(_mainBoardController.Status);
         }
 
+        private void DoCraftsmanAction(IPlayerConnection currentConnection, PlayerController currentPlayerController,
+            MainBoardStatus boardStatus, IEnumerable<PlayerStatus> currentOpponents, PlayerStatus currentPlayerStatus)
+        {
+            var players = GeneratePlayersOrder(_governor);
+
+            foreach (var player in players)
+            {
+                var status = _players[player].Status;
+
+                var param = new CraftsmanParameters();
+                status.Board.Buildings.OfType<GoodsFactoryBase>().ToList().ForEach(x => x.DoAction(ref param));
+
+                var plantations =
+                    status.Board.Plantations.Where(x => x.ActivePoints > 0).Select(x => x.Type).GroupBy(x => x);
+
+                var production = plantations.ToDictionary(plantation => plantation.Key,
+                    plantation => Math.Min(plantation.Count(), param.GoodsProduction[plantation.Key]));
+
+                currentPlayerController.DoCraftsmanAction(production);
+            }
+
+            var additionalGoods = currentConnection.SelectAdditionalGoods(currentPlayerStatus, boardStatus,
+                currentOpponents);
+
+            currentPlayerController.DoCraftsmanActionReceiveAdditionalGoods(additionalGoods);
+        }
+
         private void DoCaptainFinishAction(MainBoardController mainBoardController)
         {
             var freeGoods = mainBoardController.Status.Ships.Select(x => x.FinishRound()).Where(x => x != null);
             mainBoardController.Status.ReceiveGoods(freeGoods);
         }
 
-        private void DoCaptainAction(PlayerStatus status, IPlayerConnection connection, PlayerController controller, bool isHasPrivilage, List<PlayerStatus> opponents)
+        private void DoCaptainAction(PlayerStatus status, IPlayerConnection connection, PlayerController controller,
+            bool isHasPrivilage, List<PlayerStatus> opponents)
         {
             var goodsToShip = connection.SelectGoodsToShip(status, _mainBoardController.Status, opponents);
             controller.DoCaptainAction(goodsToShip);
@@ -177,7 +206,9 @@ namespace Core.Core
 
             var playersGoods = _players.Values.SelectMany(x => x.Status.Warehouse.GetAvailableGoods()).Distinct();
             var playersNotHaveGoodsForShips =
-                _mainBoardController.Status.Ships.Where(x => x.FreeSpace != 0).Select(x => x.Type).Any(x => x.HasValue && playersGoods.Contains(x.Value));
+                _mainBoardController.Status.Ships.Where(x => x.FreeSpace != 0)
+                    .Select(x => x.Type)
+                    .Any(x => x.HasValue && playersGoods.Contains(x.Value));
 
             return allShipsFull || playersNotHaveGoodsForShips;
         }
@@ -185,7 +216,7 @@ namespace Core.Core
         private void DoTradeFinishAction(MainBoardController mainBoardController)
         {
             var market = mainBoardController.Status.Market;
-                var endPhaseResult = market.EndPhase();
+            var endPhaseResult = market.EndPhase();
 
             if (endPhaseResult != null)
             {
@@ -471,6 +502,21 @@ namespace Core.Core
             _playerStatus.Warehouse.RemoveGoods(goods, goodsCount);
             _playerStatus.AddVp(goodsCount);
             _mainBoardController.Status.Vp -= goodsCount;
+        }
+
+        public void DoCraftsmanAction(Dictionary<Goods, int> productions)
+        {
+            foreach (var production in productions)
+            {
+                _playerStatus.Warehouse.AddGoods(production.Key, production.Value);
+                _mainBoardController.Status.Warehouse.RemoveGoods(production.Key, production.Value);
+            }
+        }
+
+        public void DoCraftsmanActionReceiveAdditionalGoods(Goods additionalGoods)
+        {
+            _playerStatus.Warehouse.AddGoods(additionalGoods, 1);
+            _mainBoardController.Status.Warehouse.RemoveGoods(additionalGoods, 1);
         }
     }
 
