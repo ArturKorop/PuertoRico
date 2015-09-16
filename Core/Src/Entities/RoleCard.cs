@@ -2,10 +2,6 @@ using System;
 
 namespace Core.Entities
 {
-    public interface ICloneable<out T>
-    {
-        T Clone();
-    }
 
     public class RoleCardStatus
     {

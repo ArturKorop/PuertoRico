@@ -1,19 +1,13 @@
 ﻿using System;
-using System.CodeDom;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Text;
-using System.Xml;
-using System.Xml.Serialization;
-using Core.Core;
 using Core.Entities.Interfaces;
 using Core.Entities.IslandObjects;
 using Core.Utils;
 
 namespace Core.Entities
 {
-    public class MainBoardStatus : ICloneable<MainBoardStatus>
+    public class MainBoardStatus
     {
         public int OpenPlantationsCount { get; }
 
@@ -27,7 +21,7 @@ namespace Core.Entities
 
         public int Doubloons { get; set; }
 
-        public ColonistsWarehouse Colonists { get; private set; } = new ColonistsWarehouse();
+        public ColonistsWarehouse Colonists { get; } = new ColonistsWarehouse();
 
         public Dictionary<IBuilding, int> Buildings { get; set; }
 
@@ -41,7 +35,7 @@ namespace Core.Entities
 
         public List<RoleCard> RoleCards { get; private set; }
 
-        public ColonistsWarehouse AvailableColonists { get; private set; } = new ColonistsWarehouse();
+        public ColonistsWarehouse AvailableColonists { get; } = new ColonistsWarehouse();
 
         public MainBoardStatus(int playersCount)
         {
@@ -49,12 +43,6 @@ namespace Core.Entities
             OpenPlantationsCount = PlayersCount + 1;
             Init();
         }
-
-        /// <summary>
-        /// For serialization.
-        /// </summary>
-        public MainBoardStatus()
-        { }
 
         private void Init()
         {
@@ -91,24 +79,6 @@ namespace Core.Entities
             var result = Util.Shuffle(plantations);
 
             return result;
-        }
-
-
-        public MainBoardStatus Clone()
-        {
-            var serializer = new XmlSerializerFactory().CreateSerializer(typeof (MainBoardStatus));
-            using (var stream = new MemoryStream())
-            {
-                if (serializer != null)
-                {
-                    serializer.Serialize(stream, this);
-                    var clone = (MainBoardStatus)serializer.Deserialize(new StreamReader(stream));
-
-                    return clone;
-                }
-
-                throw new InvalidOperationException("Clone errors");
-            }
         }
     }
 

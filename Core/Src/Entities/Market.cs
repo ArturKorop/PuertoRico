@@ -23,7 +23,7 @@ namespace Core.Entities
 
         private readonly Dictionary<Goods, int> _priceList;
 
-        private List<Goods> _goodsToTrade;
+        private readonly List<Goods> _goodsToTrade;
 
         public IEnumerable<Goods> GoodsToTrade => _goodsToTrade;
 
