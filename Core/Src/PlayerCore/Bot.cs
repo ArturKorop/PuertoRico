@@ -62,15 +62,30 @@ namespace Core.PlayerCore
         }
 
         public string Name { get; }
+
         public RoleCardStatus SelectRole(List<RoleCardStatus> cards, PlayerStatus status, MainBoardStatus board, IEnumerable<PlayerStatus> opponents)
         {
-            throw new NotImplementedException();
+            var rand = new Random();
+
+            return cards[rand.Next(cards.Count - 1)];
         }
 
-        public IBuilding SelectBuildingToBuild(bool isHasPrivilage, PlayerStatus status, Dictionary<IBuilding, int> availableBuildings,
+        public IBuilding SelectBuildingToBuild(bool isHasPrivilage, PlayerStatus status, MainBoardStatus board,
             IEnumerable<PlayerStatus> opponents)
         {
-            throw new NotImplementedException();
+            var allBuildings = board.Buildings.Where(x => x.Value > 0);
+            var param = new BuilderParameters();
+                status.Board.Buildings.OfType<BuildingBase<BuilderParameters>>()
+                    .ToList()
+                    .ForEach(x => x.DoAction(ref param));
+            var discount = status.Board.Quarries.Count(x => x.IsActive);
+
+            var availableBuldings =
+                allBuildings.Where(x => x.Key.Cost - Math.Min(discount, x.Key.Discount) <= status.Doubloons).ToArray();
+
+            var building = availableBuldings[new Random().Next(availableBuldings.Count() - 1)];
+
+            return building.Key;
         }
 
         public MoveDirection MoveColonist(bool isHasPrivilage, PlayerStatus status, MainBoardStatus board, IEnumerable<PlayerStatus> opponents)
@@ -109,6 +124,11 @@ namespace Core.PlayerCore
         }
 
         public bool IsUsePrivilage(PlayerStatus status, MainBoardStatus mainBoardStatus, IEnumerable<PlayerStatus> opponents)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool IsTakeAdditionalColonist(bool isHasPrivilage, PlayerStatus status, MainBoardStatus board, List<PlayerStatus> opponents)
         {
             throw new NotImplementedException();
         }

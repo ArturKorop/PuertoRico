@@ -95,13 +95,12 @@ namespace Core.Core
                     var connection = _players[id].Connection;
                     var controller = _players[id].Controller;
                     var isHasPrivilage = status.Id == _governor;
-                    var availableBuildings = _mainBoardController.Status.Buildings;
                     var opponents = _players.Opponents(id).ToList();
 
                     switch (roleCard.Role)
                     {
                         case Roles.Builder:
-                            DoBuilderAction(connection, isHasPrivilage, status, availableBuildings, opponents,
+                            DoBuilderAction(connection, isHasPrivilage, status, _mainBoardController.Status, opponents,
                                 controller);
                             break;
                         case Roles.Mayor:
@@ -131,7 +130,7 @@ namespace Core.Core
             else if (cardStatus.IsRequiredAllPlayersActionSeveralTimes())
             {
                 var currentPlayer = _governor;
-                while (!IsCaptaionActionFinished())
+                while (!IsCaptainActionFinished())
                 {
                     var status = _players[currentPlayer].Status;
                     var connection = _players[currentPlayer].Connection;
@@ -196,7 +195,7 @@ namespace Core.Core
             controller.DoCaptainAction(goodsToShip);
         }
 
-        private bool IsCaptaionActionFinished()
+        private bool IsCaptainActionFinished()
         {
             var allShipsFull = _mainBoardController.Status.Ships.All(x => x.FreeSpace == 0);
 
@@ -282,12 +281,41 @@ namespace Core.Core
         }
 
         private void DoBuilderAction(IPlayerConnection connection, bool isHasPrivilage, PlayerStatus status,
-            Dictionary<IBuilding, int> availableBuildings, List<PlayerStatus> opponents, PlayerController controller)
+            MainBoardStatus board, List<PlayerStatus> opponents, PlayerController controller)
         {
-            var building = connection.SelectBuildingToBuild(isHasPrivilage, status, availableBuildings,
-                opponents);
+            var isSuccessfull = false;
+            IBuilding selectedBuilding = null;
+            while (!isSuccessfull)
+            {
+                var building = connection.SelectBuildingToBuild(isHasPrivilage, status, board,
+                    opponents);
 
-            bool isSuccessfull = controller.DoSelectBuildingToBuild(building, isHasPrivilage);
+                isSuccessfull = controller.DoSelectBuildingToBuild(building, isHasPrivilage);
+                if (isSuccessfull && building != null)
+                {
+                    selectedBuilding = status.Board.Buildings.Single(x => x.GetType() == building.GetType());
+                }
+            }
+
+            if (selectedBuilding == null)
+            {
+                return;
+            }
+
+            var param = new BuilderParameters();
+            status.Board.Buildings.OfType<BuildingBase<BuilderParameters>>().Where(x=>x.IsActive).ToList().ForEach(x=>x.DoAction(ref param));
+
+            if (param.TakeAdditionalColonist && board.Colonists.CurrentColonistsCount > 0)
+            {
+                var isTakeAdditionalColonist = connection.IsTakeAdditionalColonist(isHasPrivilage, status, board,
+                    opponents);
+
+                if (isTakeAdditionalColonist)
+                {
+                    board.Colonists.Move(selectedBuilding);
+                }
+            }
+            
         }
 
         private void CheckForNextRound(MainBoardStatus status)
@@ -304,7 +332,7 @@ namespace Core.Core
             var result = new List<int> {governor};
             for (int i = 1; i < PlayersCount; i++)
             {
-                var nextId = governor + i < PlayersCount ? governor + 1 : 0;
+                var nextId = governor + i < PlayersCount ? governor + i : 0;
                 result.Add(nextId);
             }
 

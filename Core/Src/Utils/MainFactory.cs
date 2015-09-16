@@ -60,6 +60,17 @@ namespace Core.Utils
             {
                 {new SmallWarehosue(), 2},
                 {new LargeWarehouse(), 2},
+                {new LargeMarket(), 2},
+                {new SmallMarket(), 2},
+                {new SmallIndigoPlant(), 2},
+                {new SmallSugarMill(), 2},
+                {new IndigoPlant(), 2},
+                {new SugarMill(), 2},
+                {new CoffeeRoaster(), 2},
+                {new TobaccoStorage(), 2},
+                {new ConstructionHut(), 2},
+                {new Hasienda(), 2},
+                {new Harbor(), 2},
             };
 
             return result;

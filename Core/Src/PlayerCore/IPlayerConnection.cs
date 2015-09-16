@@ -12,7 +12,7 @@ namespace Core.PlayerCore
 
         RoleCardStatus SelectRole(List<RoleCardStatus> cards, PlayerStatus status, MainBoardStatus board, IEnumerable<PlayerStatus> opponents);
 
-        IBuilding SelectBuildingToBuild(bool isHasPrivilage, PlayerStatus status, Dictionary<IBuilding, int> availableBuildings, IEnumerable<PlayerStatus> opponents);
+        IBuilding SelectBuildingToBuild(bool isHasPrivilage, PlayerStatus status, MainBoardStatus board, IEnumerable<PlayerStatus> opponents);
 
         MoveDirection MoveColonist(bool isHasPrivilage, PlayerStatus status, MainBoardStatus board, IEnumerable<PlayerStatus> opponents);
 
@@ -29,6 +29,8 @@ namespace Core.PlayerCore
         Goods? SelectOneGoodsForStore(PlayerStatus status, IEnumerable<PlayerStatus> opponents);
 
         bool IsUsePrivilage(PlayerStatus status, MainBoardStatus mainBoardStatus, IEnumerable<PlayerStatus> opponents);
+
+        bool IsTakeAdditionalColonist(bool isHasPrivilage, PlayerStatus status, MainBoardStatus board, List<PlayerStatus> opponents);
 
         void GameEnd(Dictionary<int, int> playersScore);
     }

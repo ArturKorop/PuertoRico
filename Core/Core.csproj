@@ -42,6 +42,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Src\Core\PlayerContainer.cs" />
     <Compile Include="Src\Core\PlayerController.cs" />
+    <Compile Include="Src\Entities\MainBoardController.cs" />
     <Compile Include="Src\Entities\RoleParameters\BuilderParameters.cs" />
     <Compile Include="Src\Entities\RoleParameters\CaptainParameters.cs" />
     <Compile Include="Src\Entities\Buildings\CityHall.cs" />

@@ -9,8 +9,8 @@ namespace ConsoleUI
         private static void Main(string[] args)
         {
             var connector1 = new ManualPlayerConnection("Artur");
-            var connector2 = new Bot("Stepan");
-            var connector3 = new Bot("Petro");
+            var connector2 = new ManualPlayerConnection("Stepan");
+            var connector3 = new ManualPlayerConnection("Petro");
 
             var game = new GameController(new ConsoleVisualizer(), connector1, connector2, connector3);
 

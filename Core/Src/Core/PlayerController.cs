@@ -46,14 +46,18 @@ namespace Core.Core
 
         public bool DoSelectBuildingToBuild(IBuilding building, bool isHasPrivilage)
         {
+            if (building == null)
+            {
+                return true;
+            }
+
             var buildingToBuild =
                 _mainBoardController.Status.Buildings.Single(x => x.Key.GetType() == building.GetType());
             var totalDiscount = _playerStatus.Board.Quarries.Count(x => x.CurrentColonistsCount > 0);
-            var realCost = buildingToBuild.Key.Cost - totalDiscount;
+            var realCost = buildingToBuild.Key.Cost - totalDiscount - (isHasPrivilage ? 1 : 0);
 
-            if (buildingToBuild.Value > 0 && realCost <= _playerStatus.Doubloons)
+            if (buildingToBuild.Value > 0 && realCost <= _playerStatus.Doubloons && _playerStatus.Board.CanBuildBuilding(buildingToBuild.Key.Size))
             {
-                // TODO: check place amount
                 _playerStatus.Board.BuildBuilding(buildingToBuild.Key);
                 _mainBoardController.Status.Buildings[buildingToBuild.Key]--;
 
